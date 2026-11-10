@@ -143,7 +143,9 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_SOURCE_DIR = BASE_DIR / "static"
+# In the Docker runtime stage only the collected staticfiles/ tree is present.
+STATICFILES_DIRS = [STATIC_SOURCE_DIR] if STATIC_SOURCE_DIR.exists() else []
 STATIC_ROOT = BASE_DIR / "staticfiles"
 APPEND_SLASH = False
 
