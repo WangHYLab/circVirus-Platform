@@ -1,10 +1,9 @@
 # circVirus
 
-Django site hosting three services from the Wang Lab (Tongji University):
+Django site hosting two databases from the Wang Lab (Tongji University):
 
 - **vcRNAdb** — viral circular RNA database (`/`)
 - **DTDB** — drug-target database (`/dtdb/`)
-- **PI** — internal ELISA report generator (`/pi/`)
 
 The project runs on **Python 3.12 + Django 5.2** and stores all data in a local
 **SQLite** database built from the TSV dumps in `data2db/`.
@@ -83,13 +82,9 @@ are baked into the image.
 
 ### Persistence note
 
-SQLite and the `media/` directory live inside the container filesystem. On
-platforms with ephemeral disks, uploaded PI files and new `downloadInfo` rows
-are lost on redeploy. To persist them:
-
-- mount a volume at `/app/media` for uploads, and
-- mount a volume at `/data` and set `SQLITE_PATH=/data/db.sqlite3` for the
-  database.
+SQLite lives inside the container filesystem. On platforms with ephemeral disks,
+new `downloadInfo` rows are lost on redeploy. To persist the database, mount a
+volume at `/data` and set `SQLITE_PATH=/data/db.sqlite3`.
 
 The container entrypoint initializes a missing/empty `SQLITE_PATH` database from
 `data2db/` on first start. The default database is baked into the image at build
@@ -102,15 +97,11 @@ circVirus/          Django project (settings, URLs, WSGI)
 web/                single Django app
   views.py          vcRNAdb views
   views_dtdb.py     DTDB views
-  views_pi.py       PI upload/report views
-  pi_func1_1.py     PI parser: concentration plates
-  pi_func1_2.py     PI parser: standard plates
   models.py         table definitions (web_data, web_dtdb*, ...)
   management/commands/load_data.py
 templates/          server-rendered HTML
 static/             CSS/JS/vendored chart libraries/downloads
 data2db/            source TSV dumps imported into SQLite
-media/              uploaded files and generated Report-*.xlsx
 ```
 
 ## Notes
@@ -119,4 +110,3 @@ media/              uploaded files and generated Report-*.xlsx
   table names. DTDB queries use the model that matches the target table.
 - A case-insensitive SQLite `REGEXP` function is registered in
   `web/apps.py` so the existing `REGEXP` searches behave like MySQL.
-- The PI upload endpoint is CSRF-exempt because it is called as an API.

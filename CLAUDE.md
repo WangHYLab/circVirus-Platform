@@ -4,12 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Django 5.2 / Python 3.12 site for the Wang Lab (Tongji University) hosting three
-services from one project:
+Django 5.2 / Python 3.12 site for the Wang Lab (Tongji University) hosting two
+databases from one project:
 
 1. **vcRNAdb** — viral circular RNA database, served at the site root (`/`, `/search/`, `/browser/`, `/result/`, `/detail/`, `/download/`, `/statistic/`, `/help/`).
 2. **DTDB** — drug-target database, served under `/dtdb/` (`query`, `dquery`, `cclquery`, `ctquery`, `search`, `browser`, `download`, `help`).
-3. **PI** — internal ELISA report service under `/pi/` that ingests instrument exports and generates a formatted Excel report.
 
 All data now lives in a local **SQLite** database (`db.sqlite3`, gitignored)
 built from the TSV dumps in `data2db/`. A ready-to-use conda env named
@@ -43,16 +42,14 @@ are added, run one with `python manage.py test web.tests.<Class>.<test>`.
 
 ### Routing
 
-All routes are in [circVirus/urls.py](circVirus/urls.py), pointing at three view
+All routes are in [circVirus/urls.py](circVirus/urls.py), pointing at two view
 modules in [web/](web/):
 
 - [web/views.py](web/views.py) — vcRNAdb views
 - [web/views_dtdb.py](web/views_dtdb.py) — DTDB views
-- [web/views_pi.py](web/views_pi.py) — PI upload handler
 
-`APPEND_SLASH = False`, so URLs must match exactly. Media (`/media/...`) is
-served by `django.views.static.serve` unconditionally so PI report links work in
-production too. Static files are served by WhiteNoise in production.
+`APPEND_SLASH = False`, so URLs must match exactly. Static files are served by
+WhiteNoise in production.
 
 ### Data import and models
 
@@ -87,19 +84,6 @@ Django's SQLite backend registers a case-sensitive `regexp`; [web/apps.py](web/a
 overrides it on `connection_created` with a case-insensitive implementation so the
 existing `REGEXP` searches keep MySQL's behavior.
 
-### PI report pipeline
-
-[web/views_pi.py](web/views_pi.py) accepts a multipart POST at `/pi/result/`
-(CSRF-exempt, as it is an API). The `type` field selects the parser:
-
-- `type=nd` → `doReport1` in [web/pi_func1_1.py](web/pi_func1_1.py) (concentration plates: `1E-<conc>-<well>` sample names)
-- `type=pd` → `doReport2` in [web/pi_func1_2.py](web/pi_func1_2.py) (standard plates: `A1`-style wells)
-
-Both read a tab-delimited text file, parse `Group: Unknown(s)` blocks, pivot into
-a 96-well matrix, apply `checkValue` thresholds (`未检出` / `超上限`), and write
-`media/Report-<original-name>.xlsx` with openpyxl. The view returns an HTML link
-to that file. Uploads are written into `MEDIA_ROOT` (`media/`).
-
 ### Frontend
 
 Server-rendered Django templates (`templates/<module>-<page>.html`) with
@@ -119,8 +103,8 @@ start. [README.md](README.md) documents the app.hostoflow.io flow and all
 environment variables (`DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `ALLOWED_HOSTS`,
 `CSRF_TRUSTED_ORIGINS`, `SQLITE_PATH`, `PORT`, `WEB_CONCURRENCY`).
 
-SQLite and `media/` are container-local; mount `/app/media` and/or a volume for
-`SQLITE_PATH` if uploaded PI files or `downloadInfo` rows must survive redeploys.
+SQLite is container-local; mount a volume for `SQLITE_PATH` if new
+`downloadInfo` rows must survive redeploys.
 
 ## Conventions and gotchas
 
@@ -128,4 +112,3 @@ SQLite and `media/` are container-local; mount `/app/media` and/or a volume for
 - `templates/test.html` exists as the "no data" fallback used by DTDB views.
 - Dead/backup code exists: `views.py:home_new` and `views.py:advanceresult` are unrouted; `views_dtdb.list_to_tree` is defined twice (second wins); `dtdb-homebk.html` and `vcRNAdb-browser.bk.html` are backups.
 - `DEBUG` defaults to false; set `DJANGO_DEBUG=1` for local debugging. `ALLOWED_HOSTS` defaults to `*` for PaaS convenience — restrict it in production.
-- The `media/` directory is tracked only via `.gitkeep`; generated reports/uploads are ignored.

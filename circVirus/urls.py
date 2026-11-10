@@ -1,7 +1,7 @@
 """circVirus URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.2/topics/http/urls/
+    https://docs.djangoproject.com/en/5.2/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -13,12 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf import settings
 from django.contrib import admin
 from django.urls import path, re_path
-from django.views.static import serve
 
-from web import views, views_dtdb, views_pi
+from web import views, views_dtdb
 
 urlpatterns = [
     ## main
@@ -48,16 +46,4 @@ urlpatterns = [
     path('dtdb/download/', views_dtdb.dtdb_download),
     path('dtdb/help/', views_dtdb.dtdb_help),
     path('dtdb/browser/', views_dtdb.dtdb_browser),
-    
-    ## PI service 
-    path('pi/home/', views_pi.home),
-    path('pi/result/', views_pi.func1_result),
-
-]
-
-
-urlpatterns += [
-    # Serve user uploads and generated PI reports. For higher traffic, put a
-    # reverse proxy / object storage in front of MEDIA_ROOT instead.
-    re_path(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
 ]

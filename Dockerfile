@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # data2db/ is only needed here; the runtime image gets the resulting db.sqlite3.
-RUN mkdir -p media staticfiles \
+RUN mkdir -p staticfiles \
     && python manage.py collectstatic --noinput \
     && python manage.py migrate --noinput \
     && python manage.py load_data
@@ -50,7 +50,7 @@ COPY --from=builder /app/staticfiles /app/staticfiles
 COPY --from=builder /app/data2db /app/data2db
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 
-RUN chmod +x /app/docker-entrypoint.sh && mkdir -p media
+RUN chmod +x /app/docker-entrypoint.sh
 
 EXPOSE 8000
 

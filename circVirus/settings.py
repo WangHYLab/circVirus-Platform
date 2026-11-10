@@ -157,13 +157,3 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
-
-# MEDIA
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-FILE_UPLOAD_HANDLERS = [
-    "django.core.files.uploadhandler.MemoryFileUploadHandler",
-    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
-]
-FILE_UPLOAD_DIRECTORY_PERMISSIONS = None
