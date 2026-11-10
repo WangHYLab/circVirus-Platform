@@ -110,15 +110,17 @@ static files under `static/media/download/`, not view-served.
 
 ## Deployment
 
-The [Dockerfile](Dockerfile) uses `python:3.12-slim`, installs requirements, runs
-`collectstatic`, `migrate`, and `load_data` at build time, then starts Gunicorn
-on `$PORT`. [README.md](README.md) documents the app.hostoflow.io flow and all
+The [Dockerfile](Dockerfile) is a multi-stage build: the builder installs
+requirements, runs `collectstatic`, `migrate`, and `load_data`, and the runtime
+stage ships only the app, `staticfiles/`, the built `db.sqlite3`, and `data2db/`.
+Gunicorn binds to `$PORT`. [docker-entrypoint.sh](docker-entrypoint.sh)
+initializes a missing/empty `SQLITE_PATH` database from `data2db/` on first
+start. [README.md](README.md) documents the app.hostoflow.io flow and all
 environment variables (`DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `ALLOWED_HOSTS`,
 `CSRF_TRUSTED_ORIGINS`, `SQLITE_PATH`, `PORT`, `WEB_CONCURRENCY`).
 
-SQLite and `media/` are container-local; attach a volume if uploaded PI files or
-`downloadInfo` rows must survive redeploys. The database content is rebuilt from
-`data2db/` at image build time.
+SQLite and `media/` are container-local; mount `/app/media` and/or a volume for
+`SQLITE_PATH` if uploaded PI files or `downloadInfo` rows must survive redeploys.
 
 ## Conventions and gotchas
 

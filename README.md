@@ -85,9 +85,15 @@ are baked into the image.
 
 SQLite and the `media/` directory live inside the container filesystem. On
 platforms with ephemeral disks, uploaded PI files and new `downloadInfo` rows
-are lost on redeploy. Attach a persistent volume (and set `SQLITE_PATH` plus a
-`media/` mount) if that data must survive. The database content itself is
-rebuilt from `data2db/` at image build time, so it does not need a volume.
+are lost on redeploy. To persist them:
+
+- mount a volume at `/app/media` for uploads, and
+- mount a volume at `/data` and set `SQLITE_PATH=/data/db.sqlite3` for the
+  database.
+
+The container entrypoint initializes a missing/empty `SQLITE_PATH` database from
+`data2db/` on first start. The default database is baked into the image at build
+time and needs no volume.
 
 ## Project layout
 

@@ -46,12 +46,16 @@ COPY --from=builder /app/web /app/web
 COPY --from=builder /app/templates /app/templates
 COPY --from=builder /app/db.sqlite3 /app/db.sqlite3
 COPY --from=builder /app/staticfiles /app/staticfiles
+# Kept so a SQLITE_PATH volume can be initialized on first start.
+COPY --from=builder /app/data2db /app/data2db
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 
-RUN mkdir -p media
+RUN chmod +x /app/docker-entrypoint.sh && mkdir -p media
 
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD curl -fsS "http://127.0.0.1:${PORT}/" || exit 1
 
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["sh", "-c", "gunicorn circVirus.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers ${WEB_CONCURRENCY:-3} --timeout 120 --access-logfile - --error-logfile -"]
