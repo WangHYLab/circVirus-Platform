@@ -1,0 +1,641 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.t1 {
+  color: #77C0ED
+}
+
+h1 {
+  font-size: 1.8em;
+  text-align: left;
+  line-height: 1em;
+  /* colora: #DBA1C6; */
+}
+
+#banner {
+  font-size: 1.8em;
+  line-height: 1em;
+  color: #2F4F4F;
+}
+
+#banner h1 a:link, #banner h1 a:visited {
+  color: #DBA1C6;
+  display: block;
+  font-weight: bold;
+  margin: 0 0 .6em .2em;
+  text-decoration: none;
+  /* width: 427px; */
+}
+
+#banner h1 a:hover, #banner h1 a:active {
+  background: none;
+  color: #DBA1C6;
+}
+
+/* navigation */
+#banner nav {
+  background: #DCDCDC;
+  font-size: 0.8em;
+  height: 40px;
+  line-height: 30px;
+  /* margin: 0 auto 2em auto; */
+  /* padding: 1px 1px; */
+  text-align: left;
+  /* width: 1200px; */
+  /* border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px; */
+}
+
+#banner nav ul {
+  list-style: none;
+  margin: 0 0 0 0;
+  /* width: 1200px; */
+  padding: 0;
+  text-align: left;
+}
+
+#banner nav li {
+  float: left;
+  display: inline;
+  margin-left: 20px;
+}
+
+#banner nav a:link, #banner nav a:visited {
+  color: black;
+  display: inline-block;
+  height: 30px;
+  padding: 5px 0.2em;
+  text-decoration: none;
+}
+
+#banner nav a:hover, #banner nav a:active,
+#banner nav .active a:link, #banner nav .active a:visited {
+  /* background: #2F4F4F; */
+  color: #2E8B57;
+  text-shadow: none !important;
+}
+
+#nav-text {
+  /* float: right; */
+  margin-right: 5px;
+  line-height: 1.5em;
+}
+
+.search-mode {
+  font-size: 0.8em;
+  /* line-height: 1em; */
+  height: 32px;
+  margin-top: 0px;
+  width: 70px;
+}
+
+.search-mode2 {
+  font-size: 0.8em;
+  /* line-height: 1em; */
+  height: 32px;
+  margin-top: 0px;
+  width: 170px;
+}
+
+.search-mode3 {
+  font-size: 0.8em;
+  /* line-height: 1em; */
+  height: 32px;
+  margin-top: 0px;
+  width: 140px;
+}
+
+#q-search {
+  /* float: right; */
+  font-size: 1em;
+  line-height: 1em;
+  margin-right: 15px;
+  margin-top: 3px;
+}
+
+.q-search-form {
+  float: right;
+}
+
+.gap {
+  width: auto;
+  height: 2px;
+  background-color: #DCDCDC;
+}
+
+/* content */
+.home-box {
+  /* width: 700px; */
+  margin-left: 30px;
+  margin-right: 30px;
+  font-size: 1.2em;
+  /* float: left; */
+}
+
+.p-justify {
+  text-align: justify;
+  text-indent: 2em;
+}
+
+#home-pic img {
+  width: 300px;
+  height: 700px;
+  /* float: right; */
+  margin-left: 100px;
+}
+
+#home-pic {
+  /* background-color: #DCDCDC; */
+  padding: 2px;
+  /* margin-right: 50px; */
+}
+
+#search {
+  margin: 15px 30px;
+  font-size: 1.5em;
+  clear: both;
+}
+
+#content {
+  float: left;
+}
+
+.left-plot {
+  width: 500px;
+  float: left;
+  margin-left: 20px;
+}
+
+.left-plot div {
+  margin: 0;
+}
+
+.right-plot {
+  /* background-color: black; */
+  /* width: 700px; */
+  /* height: 500px; */
+  margin-left: 50px;
+  margin-top: 50px;
+  float: right;
+}
+
+/* .right-plot div {
+  float: left;
+} */
+.bar-plot-mut {
+  width: 180px;
+  height: 180px;
+  margin-left: 15px;
+  margin-top: 10px;
+  float: left;
+}
+
+.bar-plot-expr {
+  width: 180px;
+  height: 180px;
+  margin-left: 15px;
+  margin-top: 10px;
+  float: left;
+}
+
+.check-nav {
+  width: 500px;
+  clear: both;
+}
+
+.check-name {
+  cursor: pointer;
+  margin: 0;
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.check-span {
+  /* background-color: black; */
+  border: 5px;
+  border-color: black;
+  width: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+input[type=checkbox] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+  margin: 0;
+}
+
+label {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 40px;
+  height: 20px;
+  background: grey;
+  display: block;
+  border-radius: 20px;
+  position: relative;
+}
+
+label:after {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+input:checked+label {
+  background: #bada55;
+}
+
+input:checked+label:after {
+  left: calc(100% - 2px);
+  transform: translateX(-100%);
+}
+
+label:active:after {
+  width: 130px;
+}
+
+#boxplot {
+  height: 500px;
+  width: 500px;
+  margin-top: 30px;
+}
+
+#pieplot {
+  height: 500px;
+  width: 500px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  /* float: right; */
+}
+
+#boxplot2 {
+  margin-top: 30px;
+  height: 500px;
+  width: 500px;
+}
+
+#treeplot {
+  height: 400px;
+  width: 500px;
+}
+
+#home-tree {
+  height: 300px;
+  width: 500px;
+}
+
+.node {
+  font: 15px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+#searchbox {}
+
+.connec-tree {
+  /* background-color: grey; */
+  width: 700px;
+  height: 200px;
+}
+
+#drug-search {
+  /* background-color: #DCDCDC; */
+  font-size: 1em;
+  line-height: 1.5em;
+  border-radius: 5px;
+  margin-top: 30px;
+}
+
+/* footer */
+#footer {
+  /*  */
+  /* width: 1200px; */
+  padding-bottom: 2em;
+  text-align: left;
+  height: 60px;
+  padding-top: 7px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  clear: both;
+}
+
+#footer a {
+  text-decoration: none;
+}
+
+#footer .photo {
+  float: left;
+  height: 55px;
+  width: 300px;
+  margin-right: 30px;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.beian {
+  margin-left: 43%;
+  font-size: 12px;
+}
+
+.beian a {
+  color: orange;
+  text-decoration: none;
+}
+
+.beian a:hover {
+  text-decoration: none;
+}
+
+#tableExpr {
+  width: 180px;
+  position: fixed;
+  top: 200px;
+  right: 10px;
+  overflow: auto;
+  height: 300px;
+  background-color: grey;
+  text-align: center;
+}
+
+#tableMut {
+  width: 180px;
+  position: fixed;
+  top: 200px;
+  right: 10px;
+  overflow: auto;
+  height: 300px;
+  background-color: grey;
+  text-align: center;
+}
+
+#tableMut tr td {
+  background-color: #FFF5EE;
+}
+
+#tableExpr tr td {
+  background-color: #FFF5EE;
+}
+
+/* .tbody {
+  border-style: solid 1px black;
+  width: 100%;
+  color: black;
+} */
+table {
+  border-style: solid 1px black;
+  width: 100%;
+}
+
+/* ## download page */
+.databox {
+  width: 800px;
+  /* height: 300px; */
+  margin-left: 100px;
+  border: 1px grey solid;
+  margin-top: 20px;
+  box-shadow: 5px 5px 3px 0px grey;
+  overflow: hidden;
+}
+
+.databox h2 {
+  /* font-size: 20px; */
+  font-style: normal;
+  color: #77C0ED;
+  margin-left: 50px;
+  margin-top: 10px;
+  margin-bottom: 3px;
+}
+
+.databox .p-main {
+  margin-left: 50px;
+  margin-top: 0;
+}
+
+.databox p {
+  margin-left: 50px;
+  margin-top: 0;
+}
+
+.download p {
+  float: left;
+  width: 500px;
+  font-size: 1.1em;
+  padding-left: 20px;
+}
+
+.download .p-download {
+  font-size: 1.0em;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  float: right;
+  margin-right: 50px;
+  border: 1px solid grey;
+  padding: 0px 20px;
+  cursor: pointer;
+  color: blue;
+  width: 80px;
+}
+
+.p-download a {
+  text-decoration: none;
+}
+
+/* browser */
+.tigle {
+  position: relative;
+}
+
+.triangle-up {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 8px solid white;
+  position: absolute;
+  top: 15%;
+  right: 2%;
+  cursor: pointer;
+}
+
+.triangle-down {
+  width: 0;
+  height: 0;
+  padding-top: 10px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 8px solid #DBA1C6;
+  position: absolute;
+  top: 55%;
+  right: 2%;
+  cursor: pointer;
+}
+
+#result-table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2em;
+}
+
+#result-table td,
+#result-table th {
+  font-size: 1em;
+  border: 0.5px solid grey;
+  padding: 3px 7px 2px 7px;
+}
+
+#result-table th {
+  font-size: 1em;
+  color: black;
+  text-align: left;
+  padding-top: 5px;
+  padding-bottom: 4px;
+  background-color: #77C0ED;
+}
+
+/* #result-table tr.alt td {
+  color: #000000;
+} */
+#table {
+  width: 90%;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 30px;
+}
+
+.td-id a {
+  text-decoration: none;
+}
+
+.td-id {
+  text-align: center;
+}
+
+/* help */
+.title-one {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#help .ol1 {
+  margin-left: 5%;
+}
+
+.ol1 {
+  font-size: 18px;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+#help li {
+  margin-top: 10px;
+}
+
+#help p {
+  text-indent: 1em;
+  margin: 0;
+  padding: 0;
+}
+
+#help {
+  padding-right: 16%;
+  margin-left: 5%;
+  margin-top: 30px;
+}
+
+#help a {
+  text-decoration: none;
+}
+
+#help a:hover {
+  text-decoration: none;
+}
+
+.a-italic {
+  font-style: italic;
+}
+
+.bpcolor {
+  color: #007bff;
+}
+
+/* SEARCH */
+#drug-table {
+  font-size: 13px;
+}
+
+#ccl-table {
+  font-size: 14px;
+}
+
+#ct-table {
+  font-size: 14px;
+}
+
+#ct-child-table {
+  font-size: 13px;
+}
+
+.search-info {
+  font-size: 16px;
+  margin-left: 5%;
+  margin-bottom: 0;
+  margin-top: 5px;
+}
+
+.descrption {
+  margin-bottom: 20px;
+}
+
+.cluster-num {
+  cursor: pointer;
+}
+
+#pie-plot {
+  width: 700px;
+  height: 700px;
+  /* background-color: grey; */
+  float: left;
+  margin-left: 50px;
+  margin-right: 10px;
+  margin-top: 20px;
+}
+
+#home-pic {
+  float: left;
+}
+
+.home-p {
+  margin-left: 0px;
+  font-size: 18px;
+}
+
+.home-plot {
+  margin-right: 0%;
+  width: 500px;
+  float: left;
+  /* margin-left: 20px; */
+}
+
+.home-plot div {
+  margin: 0;
+}

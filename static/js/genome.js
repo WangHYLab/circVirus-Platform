@@ -1,0 +1,348 @@
+var genomeLengh = {
+  'HPV16': 7906,
+  'HPV18': 7857,
+  'KSHV': 136100,
+  'rLCV': 171096,
+  'EBV': 171323,
+  'HBV': 3182,
+  'ZIKV': 10807,
+  'MERS-CoV': 30119
+}
+var genomeGeneNum = {
+  'HPV16': 8,
+  'HPV18': 8,
+  'KSHV': 86,
+  'rLCV': 79,
+  'EBV': 87,
+  'HBV': 4,
+  'ZIKV': 4,
+  'MERS-Cov': 10
+}
+var genomeName = {
+  'HPV16': 'NC_001526.4',
+  'HPV18': 'NC_001357 .1',
+  'KSHV': 'HQ404500.1',
+  'rLCV': 'NC_006146.1',
+  'EBV': 'KC207813.1',
+  'HBV': 'NC_003977.2',
+  'ZIKV': 'KX830960.1',
+  'MERS-CoV': 'NC_019843.3'
+}
+//genome
+var nameDataset = {
+  'HPV16': ['            genome      ', 'HpV16gp5', 'HpV16gp3', 'HpV16gp4', 'HpV16gp6', 'HpV16gp7', 'HpV16gp8', 'HpV16gp1', 'HpV16gp2'],
+  'HPV18': ['            genome      ', 'HpV18gp1', 'HpV18gp2', 'HpV18gp3', 'HpV18gp4', 'HpV18gp5', 'HpV18gp6', 'HpV18gp7', 'HpV18gp8'],
+  'KSHV': ['          genome      ', 'K1', 'ORF4', 'ORF6', 'ORF7', 'ORF8', 'ORF9', 'ORF10', 'ORF11', 'ORF2', 'K2', 'K3', 'ORF70', 'K4', 'K4.2', 'K4.1', 'K5', 'K6', 'K7', 'ORF16', 'ORF17', 'ORF17.5', 'ORF18', 'ORF20', 'ORF19', 'ORF21', 'ORF22', 'ORF24', 'ORF23', 'ORF25', 'ORF26', 'ORF27', 'ORF28', 'ORF29', 'ORF30', 'ORF31', 'ORF32', 'ORF33', 'ORF34', 'ORF35', 'ORF36', 'ORF37', 'ORF38', 'ORF39', 'ORF40', 'ORF43', 'ORF42', 'ORF44', 'ORF48', 'ORF47', 'ORF46', 'ORF45', 'ORF50', 'ORF49', 'K8',
+    'K8.1', 'ORF52', 'ORF53', 'ORF54', 'ORF55', 'ORF56', 'ORF57', 'vIRF', 'vIRF', 'vIRF', 'vIRF', 'ORF61', 'ORF60', 'ORF58', 'ORF62', 'ORF59', 'ORF63', 'ORF64', 'ORF67A', 'ORF67', 'ORF66', 'ORF65', 'ORF68', 'ORF69', 'K12', 'ORF71', 'ORF73', 'ORF72', 'K14', 'ORF74', 'ORF75', 'K15'
+  ],
+  'rLCV': ['       genome        ', 'CeHV15gLMP2B', 'CeHV15gBNRF1', 'CeHV15gBCRF1', 'CeHV15gEBNA', 'CeHV15gEBNA', 'CeHV15gBHRF1', 'CeHV15gBFLF2', 'CeHV15gBFLF1', 'CeHV15gBFRF1', 'CeHV15gBFRF2', 'CeHV15gBFRF3', 'CeHV15gBPLF1', 'CeHV15gBOLF1', 'CeHV15gBORF1', 'CeHV15gBORF2', 'CeHV15gBaRF1', 'CeHV15gBMRF1', 'CeHV15gBMRF2', 'CeHV15gBMLF1', 'CeHV15gBSLF1', 'CeHV15gBSRF1', 'CeHV15gBLLF3', 'CeHV15gBLRF1', 'CeHV15gBLRF2', 'CeHV15ggp350', 'CeHV15gBLLF2', 'CeHV15gEBNA', 'CeHV15gEBNA', 'CeHV15gEBNA',
+    'CeHV15gBZLF2', 'CeHV15gBZLF1', 'CeHV15gBRLF1', 'CeHV15gBRRF1', 'CeHV15gBRRF2', 'CeHV15gEBNA', 'CeHV15gBKRF2', 'CeHV15gBKRF3', 'CeHV15gBKRF4', 'CeHV15gBBLF4', 'CeHV15gBBRF1', 'CeHV15gBBRF2', 'CeHV15gBBLF3', 'CeHV15gBBLF2', 'CeHV15gBBRF3', 'CeHV15gBBLF1', 'CeHV15gBGLF5', 'CeHV15gBGLF4', 'CeHV15gBGLF3', 'CeHV15gBDRF1', 'CeHV15gBGLF2', 'CeHV15gBGLF1', 'CeHV15gBDLF4', 'CeHV15gBDLF3', 'CeHV15gBDLF2', 'CeHV15gBDLF1', 'CeHV15gBcLF1', 'CeHV15gBcRF1.1', 'CeHV15gBTRF1', 'CeHV15gBXLF2', 'CeHV15gBXLF1', 'CeHV15gBXRF1', 'CeHV15gBVRF1', 'CeHV15gBVRF2', 'CeHV15gBILF2', 'CeHV15gLF3', 'CeHV15gLF2', 'CeHV15gLF1', 'CeHV15gBILF1', 'CeHV15gBALF5', 'CeHV15gECRF4', 'CeHV15gBALF4', 'CeHV15gBALF3', 'CeHV15gBARF0', 'CeHV15gBALF2', 'CeHV15gBALF1', 'CeHV15gBARF1.1', 'CeHV15gBNLF2b', 'CeHV15gBNLF2a', 'CeHV15gLMP1'
+  ],
+  'EBV': ['          genome   ', 'BNRF1', 'BCRF1', 'EBNA', 'EBNA', 'EBNA', 'EBNA', 'BWRF1', 'EBNA', 'BWRF1', 'BWRF1', 'BWRF1', 'BWRF1', 'BWRF1', 'BWRF1', 'BWRF1', 'BHLF1', 'BHRF1', 'BFLF1', 'BFLF2', 'BFRF1A', 'BFRF1', 'BFRF2', 'BFRF3', 'BOLF1', 'BPLF1', 'EBNA', 'BORF1', 'BORF2', 'BaRF1', 'BMRF1', 'BMRF2', 'BSLF1', 'BSLF2/BMLF1', 'BSRF1', 'BLLF3', 'BLRF1', 'BLRF2', 'BLLF1', 'BLLF2', 'BZLF2', 'BRLF1', 'BZLF1', 'BRRF1', 'BRRF2', 'BKRF2', 'BKRF3', 'BKRF4', 'BBLF4', 'BBRF1', 'BBRF2', 'BBLF2/BBLF3', 'BBRF3', 'BGLF3', 'BGLF3', 'BGLF4', 'BGLF5', 'BBLF1', 'BGRF1/BDRF1', 'BDLF3', 'BDLF4', 'BGLF1', 'BGLF2', 'BDLF1', 'BDLF2', 'BDLF3', 'BcLF1', 'BcRF1', 'BTRF1', 'BXLF1', 'BXLF2', 'BXRF1', 'BVRF1', 'BVLF1', 'BVRF2', 'BdRF1', 'BILF2', 'RPMS1', 'LF3', 'BILF1', 'LF1', 'LF2', 'BALF5', 'A73', 'BALF3', 'BALF4', 'BARF0', 'BALF2', 'BALF1', 'BARF1', 'LMP', 'LMP', 'BNLF2a', 'BNLF2b', 'LMP'],
+  'HBV': ['          genome      ', 'HBVgp3', 'HBVgp4', 'HBVgp1', 'HBVgp2'],
+  'ZIKV': ['          genome      ', 'five_prime_UTR', 'CDS', 'three_prime_UTR'],
+  'MERS-CoV': ['          genome      ', 'orf1ab', 'S', 'orf3', 'orf4a', 'orf4b', 'orf5', 'E', 'M', 'N', 'orf8b']
+}
+var startDataset = {
+  'HPV16': [0, 1, 1, 1892, 2986, 3373, 4775, 7125, 7604],
+  'HPV18': [0, 105, 590, 914, 2817, 3418, 3936, 4244, 5430],
+  'KSHV': [0, 4, 1082, 3209, 6624, 8695, 11359, 14515, 15786, 17196, 17196, 18603, 19852, 21305, 21937, 21937, 25300, 26502, 28209, 29667, 30282, 30282, 31946, 32390, 32390, 34905, 36635, 38820, 38820, 42299, 46455, 47394, 48512, 48884, 50146, 50376, 50927, 52284, 54058, 55058, 55498, 56795, 58210, 58423, 59830, 61957, 61957, 64414, 66867, 66867, 66867, 66867, 71118, 71151, 74372, 75437, 76246, 76800, 77258, 78241, 78958, 81592, 83310, 85529, 88896, 91274, 93976, 93976, 93976, 93996, 93996, 100733, 103525, 111340, 111340, 111340, 111340, 114521, 115957, 116948, 121284, 121957, 121957, 126877, 128432, 129567, 129567],
+  'rLCV': [0, 141, 1836, 9920, 11958, 30612, 35902, 37566, 38532, 40465, 41358, 43093, 43646, 53013, 56698, 57852, 60333, 61334, 62553, 64261, 65855, 68522, 69250, 70163, 70542, 71050, 71190, 73534, 76628, 79626, 83232, 83997, 85301, 87108, 88226, 89767, 91383, 91778, 92556, 93317, 95691, 97438, 98271, 98945, 100652, 102311, 102490, 103889, 105505, 106502, 107427, 108415, 109881, 111969, 112813, 114034, 114955, 119641, 121361, 122569, 124694, 126516, 127075, 129594, 131487, 135159, 145093, 146343, 147746, 149283, 150810, 152333, 154914, 156117, 156984, 160472, 161120, 162960, 163265, 164303],
+  'EBV': [0, 1691, 9631, 11305, 11305, 11305, 11305, 12541, 14352, 15613, 18685, 21757, 24829, 27901, 30973, 34045, 38014, 41471, 43691, 43691, 46236, 46544, 47520, 49219, 49775, 49775, 50134, 62729, 63881, 66516, 67552, 68491, 70454, 70454, 74594, 75320, 76219, 76575, 77132, 77132, 89157, 89838, 89838, 92728, 93955, 97617, 98065, 98846, 99537, 101588, 103660, 104403, 106693, 108459, 108459, 108459, 108459, 108459, 112650, 113191, 113191, 113191, 113191, 118066, 118066, 118066, 121019, 125073, 127416, 128608, 128608, 132571, 133013, 134632, 135432, 136331, 137464, 138352, 140570, 149025, 149025, 149025, 151372, 155549, 156244, 156244, 159121, 160550, 164388, 165008, 166011, 166483, 166483, 166483, 169294],
+  'HBV': [0, 1376, 1816, 2309, 2850],
+  'ZIKV': [0, 1, 107, 10379],
+  'MERS-CoV': [0, 279, 21456, 25532, 25852, 26093, 26840, 27590, 27853, 28566, 28762]
+}
+var endDataset = {
+  'HPV16': [7906, 2756, 1950, 2989, 3237, 4794, 6292, 7601, 7900],
+  'HPV18': [7857, 581, 907, 2887, 3914, 3684, 4157, 5632, 7136],
+  'KSHV': [136100, 1113, 17056, 17056, 17056, 17056, 17056, 17056, 17056, 18549, 17871, 19572, 21066, 21794, 23108, 22491, 26070, 27011, 29311, 30259, 31947, 31209, 32958, 34906, 34365, 38839, 38839, 42300, 40038, 48267, 48267, 48267, 48820, 54198, 53599, 53599, 53599, 53599, 58397, 58397, 58397, 58397, 58397, 59697, 62067, 64475, 62794, 66822, 70903, 69437, 68926, 68098, 76241, 72060, 76241, 76241, 76719, 77187, 78215, 78970, 83136, 83136, 84838, 88595, 90933, 93774, 99719, 97312, 95069, 100719, 96264, 111426, 111426, 114324, 114027, 113278, 111962, 116927, 116927, 117641, 121906, 126393, 122762, 129583, 129583, 133501, 129811],
+  'rLCV': [171096, 1779, 5780, 10453, 30060, 32429, 36477, 38519, 40106, 41454, 43169, 43605, 52963, 56699, 57789, 60320, 61241, 62548, 63626, 65658, 68479, 69187, 70089, 70471, 71033, 73401, 71609, 76446, 79495, 83184, 83897, 85093, 87109, 88037, 89731, 91302, 91796, 92545, 93275, 95746, 97535, 98274, 98846, 100552, 101872, 102535, 103902, 105178, 106503, 111930, 108437, 109911, 110597, 112748, 114024, 114939, 119097, 121374, 122572, 124692, 126517, 127265, 128781, 131453, 132248, 137831, 146382, 147737, 148684, 152330, 151946, 154927, 156968, 156602, 160385, 161020, 161782, 163256, 163444, 166242],
+  'EBV': [171323, 5856, 10262, 97654, 89482, 82962, 37739, 13692, 37744, 16764, 19836, 22908, 25980, 29052, 32124, 35196, 40529, 43251, 46280, 44793, 49786, 49786, 49786, 49786, 63034, 59904, 97654, 66600, 66600, 69916, 69916, 69916, 74593, 72068, 75316, 76231, 77129, 77129, 79904, 77763, 89828, 93925, 90943, 93827, 95631, 99504, 99504, 99504, 101971, 104502, 104502, 106750, 108075, 112825, 111829, 111326, 110053, 109043, 118064, 117016, 116766, 116144, 114641, 121098, 120188, 118816, 125422, 128686, 128686, 132846, 131021, 134886, 134886, 135627, 137455, 137455, 138282, 160531, 143711, 152641, 151694, 150417, 156288, 160531, 160908, 158912, 160536, 164356, 164984, 165712, 177679, 169088, 167067, 166836, 177679],
+  'HBV': [3182, 464, 638, 2498, 1169],
+  'ZIKV': [10807, 105, 10271, 428],
+  'MERS-CoV': [30119, 21514, 25517, 25843, 26181, 26833, 27514, 27838, 28512, 29807, 29100]
+}
+var lengthDataset = {
+  'HPV16': [7906, 2755, 1949, 1097, 251, 1421, 1517, 476, 296],
+  'HPV18': [7857, 476, 317, 1973, 1097, 266, 221, 1388, 1706],
+  'KSHV': [136100, 1109, 15974, 13847, 10432, 8361, 5697, 2541, 1270, 1353, 675, 969, 1214, 489, 1171, 554, 770, 509, 1102, 592, 1665, 927, 1012, 2516, 1975, 3934, 2204, 3480, 1218, 5968, 1812, 873, 308, 5314, 3453, 3223, 2672, 1315, 4339, 3339, 2899, 1602, 187, 1274, 2237, 2518, 837, 2408, 4036, 2570, 2059, 1231, 5123, 909, 1869, 804, 473, 387, 957, 729, 4178, 1544, 1528, 3066, 2037, 2500, 5743, 3336, 1093, 6723, 2268, 10693, 7901, 2984, 2687, 1938, 622, 2406, 970, 693, 622, 4436, 805, 2706, 1151, 3934, 244],
+  'rLCV': [171096, 1638, 3944, 533, 18102, 1817, 575, 953, 1574, 989, 1811, 512, 9317, 3686, 1091, 2468, 908, 1214, 1073, 1397, 2624, 665, 839, 308, 491, 2351, 419, 2912, 2867, 3558, 665, 1096, 1808, 929, 1505, 1535, 413, 767, 719, 2429, 1844, 836, 575, 1607, 1220, 224, 1412, 1289, 998, 5428, 1010, 1496, 716, 779, 1211, 905, 4142, 1733, 1211, 2123, 1823, 749, 1706, 1859, 761, 2672, 1289, 1394, 938, 3047, 1136, 2594, 2054, 485, 3401, 548, 662, 296, 179, 1939],
+  'EBV': [171323, 4165, 631, 86349, 78177, 71657, 26434, 1151, 23392, 1151, 1151, 1151, 1151, 1151, 1151, 1151, 2515, 1780, 2589, 1102, 3550, 3242, 2266, 567, 13259, 10129, 47520, 3871, 2719, 3400, 2364, 1425, 4139, 1614, 722, 911, 910, 554, 2772, 631, 671, 4087, 1105, 1099, 1676, 1887, 1439, 658, 2434, 2914, 842, 2347, 1382, 4366, 3370, 2867, 1594, 584, 5414, 3825, 3575, 2953, 1450, 3032, 2122, 750, 4403, 3613, 1270, 4238, 2413, 2315, 1873, 995, 2023, 1124, 818, 22179, 3141, 3616, 2669, 1392, 4916, 4982, 4664, 2668, 1415, 3806, 596, 704, 11668, 2605, 584, 353, 8385],
+  'HBV': [3182, 464, 638, 2498, 1169],
+  'ZIKV': [10807, 105, 10271, 428],
+  'MERS-CoV': [30119, 21235, 4061, 311, 329, 740, 674, 248, 659, 1241, 338]
+};
+
+
+var strand = {
+  'HPV16': ['+', '+', '+', '+', '+', '+', '+', '+'],
+  'HPV18': ['+', '+', '+', '+', '+', '+', '+', '+'],
+  'KSHV': ['+', '+', '+', '+', '+', '+', '+', '+', '-', '-', '-', '-', '-', '-', '-', '-', '-', '+', '+', '-', '-', '+', '-', '-', '+', '+', '-', '-', '+', '+', '+', '+', '-', '+', '+', '+', '+', '+', '+', '+', '+', '+', '-', '+', '-', '-', '+', '-', '-', '-', '-', '+', '-', '+', '+', '-', '-', '+', '-', '+', '+', '-', '-', '-', '-', '-', '-', '-', '-', '-', '+', '+', '-', '-', '-', '-', '+', '+', '-', '-', '-', '-', '+', '+', '-', '-'],
+  'rLCV': ['+', '+', '+', '+', '+', '+', '-', '-', '+', '+', '+', '-', '-', '+', '+', '+', '+', '+', '-', '-', '+', '-', '+', '+', '-', '-', '+', '+', '+', '-', '-', '-', '+', '+', '+', '+', '+', '+', '-', '+', '+', '-', '-', '+', '-', '-', '-', '-', '+', '-', '-', '-', '-', '-', '-', '-', '+', '+', '-', '-', '+', '+', '+', '-', '-', '-', '-', '-', '-', '+', '-', '-', '+', '-', '-', '+', '-', '-', '-'],
+  'EBV': ['+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '+', '-', '+', '-', '-', '+', '+', '+', '+', '-', '-', '+', '+', '+', '+', '+', '+', '-', '-', '+', '-', '+', '+', '-', '-', '-', '-', '-', '+', '+', '+', '+', '+', '-', '+', '+', '-', '+', '-', '-', '-', '-', '-', '+', '-', '-', '-', '-', '-', '-', '-', '-', '+', '+', '-', '-', '+', '+', '-', '+', '+', '-', '+', '-', '-', '-', '-', '-', '+', '-', '-', '+', '-', '-', '+', '+', '-', '-', '-', '+'],
+  'HBV': ['+', '+', '+', '+'],
+  'ZIKV': ['+', '+', '+'],
+  'MERS-CoV': ['+', '+', '+', '+', '+', '+', '+', '+', '+', '+']
+}
+
+function plotGenome(key) {
+  if (genomeGeneNum[key] == 0) {
+    $('#plot-genome').height(0);
+    $('#plot-genome div').height(0);
+    $('#plot-genome canvas').height(0);
+  } else if (genomeGeneNum[key] < 10) {
+    $('#plot-genome').height(180);
+    $('#plot-genome div').height(180);
+    $('#plot-genome canvas').height(180);
+  } else if (genomeGeneNum[key] < 40 && genomeGeneNum[key] >= 10) {
+    $('#plot-genome').height(220);
+    $('#plot-genome div').height(220);
+    $('#plot-genome canvas').height(220);
+  } else if (genomeGeneNum[key] < 100 && genomeGeneNum[key] >= 40) {
+    $('#plot-genome').height(300);
+    $('#plot-genome div').height(300);
+    $('#plot-genome canvas').height(300);
+  } else {
+    $('#plot-genome').height(400);
+    $('#plot-genome div').height(400);
+    $('#plot-genome canvas').height(400);
+  };
+  var defaultColorList = [];
+  var strandInfo = strand[key];
+  for (var i = 0; i < strandInfo.length; i++) {
+    if (strandInfo[i] == '+') {
+      defaultColorList[i] = "#f7a35c";
+    } else {
+      defaultColorList[i] = "#91c7ae";
+    };
+  };
+  defaultColorList[defaultColorList.length] = '#ffffff';
+  defaultColorList = defaultColorList.reverse();
+  console.log(defaultColorList);
+
+  var myChart = echarts.init(document.getElementById('plot-genome'));
+  var option = {
+    title: {
+      text: key.concat(' Genome'),
+      subtext: genomeName[key],
+      sublink: 'https://www.ncbi.nlm.nih.gov/'
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      },
+      formatter: function(params) {
+        var tar = params[1];
+        return 'gene : ' + tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    yAxis: {
+      type: 'category',
+      axisLabel: {
+        fontSize: 9,
+      },
+      splitLine: {
+        show: false
+      },
+      data: nameDataset[key]
+    },
+    xAxis: {
+      type: 'value',
+      max: genomeLengh[key],
+
+    },
+    series: [{
+        name: '辅助',
+        type: 'bar',
+        stack: 'test',
+        itemStyle: {
+          barBorderColor: 'rgba(0,0,0,0)',
+          color: 'rgba(0,0,0,0)',
+        },
+        emphasis: {
+          itemStyle: {
+            barBorderColor: 'rgba(0,0,0,0)',
+            color: 'rgba(0,0,0,0)'
+          }
+        },
+        data: startDataset[key]
+      },
+      {
+        name: ['length'],
+        type: 'bar',
+        stack: 'test',
+        itemStyle: {
+          normal: {
+            color: function(params) {
+              var colorList = defaultColorList;
+              return colorList[params.dataIndex]
+            }
+          },
+        },
+        fontSize: 16,
+        label: {
+          show: false,
+          position: 'inside',
+        },
+        data: lengthDataset[key]
+      }
+    ],
+    // color: '#2f4f4f'
+  };
+
+  myChart.setOption(option);
+  myChart.resize();
+}
+
+function plotGenomeWithRegion(key, start, end) {
+  if (genomeGeneNum[key] == 0) {
+    $('#plot-genome').height(0);
+    $('#plot-genome div').height(0);
+    $('#plot-genome canvas').height(0);
+  } else if (genomeGeneNum[key] < 10) {
+    $('#plot-genome').height(180);
+    $('#plot-genome div').height(180);
+    $('#plot-genome canvas').height(180);
+  } else if (genomeGeneNum[key] < 100) {
+    $('#plot-genome').height(300);
+    $('#plot-genome div').height(300);
+    $('#plot-genome canvas').height(300);
+  } else {
+    $('#plot-genome').height(400);
+    $('#plot-genome div').height(400);
+    $('#plot-genome canvas').height(400);
+  };
+  var defaultColorList = [];
+  var strandInfo = strand[key];
+  for (var i = 0; i < strandInfo.length; i++) {
+    if (strandInfo[i] == '+') {
+      defaultColorList[i] = "#f7a35c";
+    } else {
+      defaultColorList[i] = "#91c7ae";
+    };
+  };
+  defaultColorList[defaultColorList.length] = '#ffffff';
+  defaultColorList = defaultColorList.reverse();
+  console.log(defaultColorList);
+
+  var myChart = echarts.init(document.getElementById('plot-genome'));
+  var genomeNameList = key.concat(' Genome : ');
+  genomeNameList = genomeNameList.concat(genomeName[key])
+  var option = {
+    title: {
+      text: 'Splice Position',
+      subtext: genomeNameList,
+      // sublink: 'https://www.ncbi.nlm.nih.gov/'
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      },
+      formatter: function(params) {
+        var tar = params[1];
+        return 'gene : ' + tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    yAxis: {
+      type: 'category',
+      axisLabel: {
+        fontSize: 9,
+      },
+      splitLine: {
+        show: false
+      },
+      data: nameDataset[key]
+    },
+    xAxis: {
+      type: 'value',
+      max: genomeLengh[key],
+
+    },
+    series: [{
+        name: '辅助',
+        type: 'bar',
+        stack: 'test',
+        itemStyle: {
+          barBorderColor: 'rgba(0,0,0,0)',
+          color: 'rgba(0,0,0,0)',
+        },
+        emphasis: {
+          itemStyle: {
+            barBorderColor: 'rgba(0,0,0,0)',
+            color: 'rgba(0,0,0,0)'
+          }
+        },
+        data: startDataset[key]
+      },
+      {
+        name: ['length'],
+        type: 'bar',
+        stack: 'test',
+        itemStyle: {
+          normal: {
+            color: function(params) {
+              var colorList = defaultColorList;
+              return colorList[params.dataIndex]
+            }
+          },
+        },
+        fontSize: 16,
+        label: {
+          show: false,
+          position: 'inside',
+        },
+        data: lengthDataset[key],
+        markLine: {
+          data: [{
+              xAxis: start,
+              symbol: 'circle',
+              name: 'start',
+              label: {
+                normal: {
+                  show: true,
+                  formatter: 'start'
+                }
+              }
+            },
+            {
+              xAxis: end,
+              symbol: 'circle',
+              name: 'end',
+              label: {
+                normal: {
+                  show: true,
+                  formatter: 'end'
+                }
+              }
+            }
+          ],
+          lineStyle: {
+            normal: {
+              type: 'solid',
+            },
+          },
+        }
+      }
+
+    ],
+    // color: '#2f4f4f'
+  };
+
+  myChart.setOption(option);
+  myChart.resize();
+}

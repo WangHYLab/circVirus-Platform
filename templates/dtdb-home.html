@@ -1,0 +1,634 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/dtdb.ico' %}" />
+  <link rel="stylesheet" href="{% static 'css/dtdb.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/echarts.min.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/plot-bar.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/Highcharts-8.2.0/code/highcharts.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/Highcharts-8.2.0/code/highcharts-more.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/Highcharts-8.2.0/code/modules/exporting.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/Highcharts-8.2.0/code/modules/export-data.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/Highcharts-8.2.0/code/modules/accessibility.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/echarts/dist/extension/dataTool.min.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/d3.js' %}"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/graphdracula/1.0.3/dracula.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.1/raphael.js"></script>
+  <script type="text/javascript" src="{% static '/js/pieplot_dataTools.js' %}"></script>
+  <title>DTDB</title>
+</head>
+
+<body id="index" class="home">
+  <div>
+    <header id="banner">
+      <h1>
+        <a href="/dtdb/"><span class="t1">D</span>rug <span class="t1">T</span>ree <span class="t1">D</span>ata<span class="t1">B</span>ase</a>
+      </h1>
+
+      <nav>
+        <ul>
+          <li class="active"><a href="/dtdb/">Home</a></li>
+          <li><a href="/dtdb/search/">Search</a></li>
+          <li><a href="/dtdb/browser/">Browser</a></li>
+          <li><a href="/dtdb/download/">Downloads</a></li>
+          <li><a href="/dtdb/help/">Help</a></li>
+
+          <form class="q-search-form" action="/dtdb/query/" method="GET" id="searchbox">
+            <!-- <input class="submit" type="submit" value="Quick Search"> -->
+            <span id="nav-text">drug:</span>
+            <input id="q-search" type="text" name="drug" placeholder="e.g. Erlotinib or 1062">
+
+          </form>
+        </ul>
+      </nav>
+
+    </header>
+
+    <section id="content">
+      <div class="home-box">
+        <p>Welcome to DTDB!</p>
+        <p class="p-justify">This database is the data collection platform and
+          visualization platform of this article (<a href="https://www.frontiersin.org/articles/10.3389/fcell.2021.773101/full?&utm_source=Email_to_authors_&utm_medium=Email&utm_content=T1_11.5e1_author&utm_campaign=Email_publication&field=&journalName=Frontiers_in_Cell_and_Developmental_Biology&id=773101">Drug-driven reclassification of
+            multiple tumour subtypes reveals intrinsic molecular concordance of
+            therapy across histologically disparate cancers</a>). This study demonstrates
+          how pharmacogenomic data can be used to systematically classify cancers
+          in terms of response to various compounds. The users can view
+          tumour classifications with a purely therapy-oriented perspective
+          independent of histology subtypes, as well as the intrinsic concordance
+          of molecular mechanisms. Start using DTDB by searching for a drug, cell
+          line, or cancer type.</p>
+
+      </div>
+      <div id="pie-plot">
+      </div>
+      <div class="home-plot">
+        <p class="home-p">e.g. Dabrafenib</p>
+        <div id="home-tree">
+        </div>
+        <div id="boxplot2">
+        </div>
+        <div id="pieplot">
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>DTDB is developed by the <a href="https://life.tongji.edu.cn/03/45/c12620a131909/page.htm">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji
+          University</a>, Shanghai, China.</p>
+      <p class="beian">ICP证：<a href="https://beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+
+  </div>
+  <script>
+    var drugCategory1 = '{{ drugCategory|safe }}';
+    var drugCategory2 = JSON.parse(drugCategory1);
+    var drugCategory = [];
+    for (var key in drugCategory2) {
+      drugCategory[drugCategory.length] = drugCategory2[key]
+    };
+
+    var num = 1;
+    var alllineage = [];
+    for (var i = 0; i < drugCategory.length; i++) {
+      alllineage = alllineage.concat(drugCategory[i])
+    };
+    var onepie = alllineage;
+    var piedata = getPieDataHome(onepie);
+
+    var dom2 = document.getElementById("pie-plot");
+    var myChart = echarts.init(dom2);
+    option = {
+      color: cols,
+      title: {
+        text: 'All drug categories',
+        // subtext: 'C'.concat(num),
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>  {b} : {c} ({d}%)'
+      },
+      legend: {
+        left: 'center',
+        top: 'bottom',
+        data: cancers
+      },
+      toolbox: {},
+      series: [{
+        name: 'Target Pathway',
+        type: 'pie',
+        radius: [200, 250],
+        center: ['50%', '45%'],
+        // roseType: 'angle',
+        label: {
+          show: false
+        },
+        emphasis: {
+          label: {
+            show: true
+          }
+        },
+        data: piedata
+      }, ]
+    };
+    myChart.setOption(option, true);
+    myChart.on('click', function(params) {
+      // 在用户点击后控制台打印数据的名称
+      console.log(params.data['name']);
+      var pathway = params.data['name'];
+      trans(pathway);
+
+    });
+    var trans = function(aaa) {
+      // window.location = "http://127.0.0.1:8000/dtdb/browser/?TargetPathway=".concat(aaa)
+      window.location = "/dtdb/browser/?TargetPathway=".concat(aaa)
+    }
+
+    // ### left plot
+    var status = '{{status}}';
+    status = parseInt(status);
+
+    var max = '{{max_conc}}';
+    max = parseFloat(max);
+    var min = '{{min_conc}}';
+    min = parseFloat(min);
+    var drug_name = '{{drug_name}}'
+    var title = 'Drug (';
+    title = title.concat(drug_name);
+    title = title.concat(') sensitivities of Subtypes');
+    // $('#footer').hide();
+    // alert('{{ ic_data }}');
+    var data1 = '{{ ic_data|safe }}';
+    var data2 = JSON.parse(data1);
+    var data = [];
+    var keys = [];
+    for (var key in data2) {
+      // console.log(key)
+      keys[keys.length] = key;
+    };
+    keys = keys.sort();
+    for (var key in keys) {
+      data[data.length] = data2[keys[key]]
+    };
+    var hengzhou = [];
+    for (var i = 0; i < data.length; i++) {
+      hengzhou[i] = i + 1;
+    };
+    //###########echart boxplot
+    // var myChart = echarts.init(document.getElementById("boxplot"));
+    // var app = {};
+    // option = null;
+    var data = echarts.dataTool.prepareBoxplotData(data);
+
+    var piePlotNum;
+    var lenSensi = '{{lenSensi}}';
+    lenSensi = parseFloat(lenSensi);
+    var uniqueNum = '{{uniqueNum}}';
+    uniqueNum = parseFloat(uniqueNum);
+    var colorsList = [];
+    for (var i = 0; i < uniqueNum; i++) {
+      if (i < lenSensi) {
+        colorsList[i] = '#77C0ED';
+      } else if (i == lenSensi) {
+        colorsList[i] = 'grey';
+      } else {
+        colorsList[i] = '#DBA1C6';
+      }
+    }
+    var array = [];
+    for (var i = 0; i < data.boxData.length; i++) {
+      array[i] = 'C'.concat(i + 1);
+    };
+    Highcharts.chart('boxplot2', {
+      credits: {
+        enabled: false
+      },
+      chart: {
+        type: 'boxplot'
+      },
+
+      title: {
+        text: title,
+        style: {
+          fontFamily: 'Microsoft YaHei',
+          fontWeight: 'bold'
+        }
+      },
+      plotOptions: {
+        boxplot: {
+          // boxDashStyle: 'Dash',
+          fillColor: null,
+          colorByPoint: true,
+          colors: colorsList,
+          lineWidth: 2,
+          medianColor: 'black',
+          medianWidth: 2,
+          stemColor: 'black',
+          // stemDashStyle: 'dot',
+          stemWidth: 1,
+          whiskerColor: 'black',
+          whiskerLength: '20%',
+          whiskerWidth: 1,
+          // negativeColor: 'red',
+          cursor: 'pointer',
+          // enableMouseTracking: false,
+          events: {
+            click: function(event) {
+              // alert(event.point.category);
+              piePlotNum = event.point.category.split('C')[1];
+              piePlot(piePlotNum);
+            }
+          }
+        }
+      },
+      legend: {
+        enabled: false
+
+      },
+
+      xAxis: {
+        categories: array,
+        title: {
+          text: 'Subtypes',
+          style: {
+            fontSize: 16,
+            fontWeight: 'bold'
+          }
+        },
+        labels: {
+          style: {
+            fontSize: 13
+          }
+        }
+      },
+
+      yAxis: {
+        title: {
+          text: 'Ln(IC50)',
+          style: {
+            fontSize: 16,
+            fontWeight: 'bold'
+          }
+        },
+        labels: {
+          style: {
+            fontSize: 13
+          }
+        },
+        plotLines: [{
+            value: max,
+            color: '#B2B2B2',
+            dashStyle: 'dash',
+            width: 1,
+            label: {
+              text: 'MAC_CONC: '.concat(max),
+              align: 'right',
+              style: {
+                color: 'gray'
+              }
+            }
+          },
+          {
+            value: min,
+            color: '#B2B2B2',
+            dashStyle: 'dash',
+            width: 1,
+            label: {
+              text: 'MIN_CONC: '.concat(min),
+              align: 'right',
+              style: {
+                color: 'gray'
+              }
+            }
+          }
+        ]
+      },
+
+      series: [{
+          name: 'Outliers',
+          color: Highcharts.getOptions().colors[0],
+          type: 'scatter',
+          enableMouseTracking: false,
+          // allowPointSelect: true,
+          data: data.outliers,
+          marker: {
+            fillColor: '#FF6347',
+            // lineWidth: 2,
+            // lineColor: 'red',
+            radius: 2
+          },
+          tooltip: {
+            pointFormat: 'Observation: {point.y}'
+          }
+        },
+        {
+          name: 'Subtypes',
+          data: data.boxData,
+          // tooltip: {
+          //   headerFormat: '<em>Subtype {point.key}</em><br/>'
+          // }
+        }
+      ]
+
+    });
+    // pie plot
+    var lineage_data1 = '{{ lineage_data|safe }}';
+    var lineage_data2 = JSON.parse(lineage_data1);
+    var lineage_data = [];
+    for (var key in lineage_data2) {
+      lineage_data[lineage_data.length] = lineage_data2[key]
+    };
+
+    // function sortId(a, b) {
+    //   return b.value - a.value
+    // };
+
+    function piePlot(piePlotNum) {
+      var num = piePlotNum;
+      var onepie = lineage_data2['C'.concat(num)];
+      var piedata = getPieData(onepie);
+
+      // ########################### ros
+      var dom2 = document.getElementById("pieplot");
+      var myChart2 = echarts.init(dom2);
+      option2 = {
+        color: cols,
+        title: {
+          text: 'Distribution of Subtype C'.concat(num),
+          // subtext: 'C'.concat(num),
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          left: 'center',
+          top: 'bottom',
+          data: cancers
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: {
+              show: true
+            },
+            dataView: {
+              show: true,
+              readOnly: false
+            },
+            magicType: {
+              show: true,
+              type: ['pie', 'funnel']
+            },
+            restore: {
+              show: true
+            },
+            saveAsImage: {
+              show: true
+            }
+          }
+        },
+        series: [{
+            name: 'C'.concat(num),
+            type: 'pie',
+            radius: [0, 150],
+            center: ['50%', '40%'],
+            // roseType: 'radius',
+            label: {
+              show: false
+            },
+            emphasis: {
+              label: {
+                show: true
+              }
+            },
+            data: piedata
+          },
+
+        ]
+      };
+      myChart2.setOption(option2, true);
+    }
+
+    var num = 1;
+    var alllineage = [];
+    for (var i = 0; i < lineage_data.length; i++) {
+      alllineage = alllineage.concat(lineage_data[i])
+    };
+    var onepie = alllineage;
+    var piedata = getPieData(onepie);
+
+    var dom2 = document.getElementById("pieplot");
+    var myChart2 = echarts.init(dom2);
+    option2 = {
+      color: cols,
+      title: {
+        text: 'Distribution of Lineage',
+        // subtext: 'C'.concat(num),
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+      },
+      legend: {
+        left: 'center',
+        top: 'bottom',
+        data: cancers
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          mark: {
+            show: true
+          },
+          dataView: {
+            show: true,
+            readOnly: false
+          },
+          magicType: {
+            show: true,
+            type: ['pie', 'funnel']
+          },
+          restore: {
+            show: true
+          },
+          saveAsImage: {
+            show: true
+          }
+        }
+      },
+      series: [{
+          name: 'C'.concat(num),
+          type: 'pie',
+          radius: [10, 150],
+          center: ['50%', '40%'],
+          roseType: 'radius',
+          label: {
+            show: false
+          },
+          emphasis: {
+            label: {
+              show: true
+            }
+          },
+          data: piedata
+        },
+
+      ]
+    };
+    myChart2.setOption(option2, true);
+
+    function countTimes(data) {
+      var obj = {};
+      return data.reduce(function(time, name) {
+        if (name in time) {
+          time[name]++;
+        } else {
+          time[name] = 1;
+        }
+        return time;
+      }, {});
+    };
+    // ################### home-tree
+    var width = 500,
+      height = 300;
+    var cluster = d3.layout.tree()
+      .size([width, height]);
+
+    var diagonal = d3.svg.diagonal()
+      .projection(function(d) {
+        return [d.x, d.y];
+      });
+    var svg = d3.select("#home-tree").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("transform", "translate(" + 10 + "," + 0 + ")");
+    // -----------------------------------------------------------------
+    //箭头
+    var marker =
+      svg.append("marker")
+      .attr("id", "resolved")
+      .attr("markerUnits", "strokeWidth") //设置为strokeWidth箭头会随着线的粗细发生变化
+      .attr("markerUnits", "userSpaceOnUse")
+      .attr("viewBox", "0 -5 10 10") //坐标系的区域
+      .attr("refX", 10) //箭头坐标
+      .attr("refY", -1)
+      .attr("markerWidth", 6) //标识的大小
+      .attr("markerHeight", 6)
+      .attr("orient", "auto") //绘制方向，可设定为：auto（自动确认方向）和 角度值
+      .attr("stroke-width", 2) //箭头宽度
+      .append("path")
+      .attr("d", "M0,-5L10,0L0,5") //箭头的路径
+      .attr('fill', 'grey'); //箭头颜色
+
+    var treeData = '{{ data|safe }}';
+    treeData = JSON.parse(treeData);
+    var i = 0;
+    var nodes = cluster.nodes(treeData).reverse();
+    nodes.forEach(function(d) {
+      d.y = d.depth * 50;
+    });
+
+    var links = cluster.links(nodes);
+    var linkEnter = svg.selectAll("path.link")
+      .data(links);
+
+    linkEnter.enter().append("path") //在指定元素之前插入一个元素
+      .attr("class", "link")
+      .attr("d", diagonal)
+      .attr("stroke", "white")
+      .attr("marker-end", "url(#resolved)") //根据箭头标记的id号标记箭头
+      .style("fill", "white")
+      .style("fill-opacity", 1)
+      // 首先为每条节点连线添加标识id
+      .attr("id", function(d, i) {
+        return "mypath" + i;
+      });
+    var node = svg.selectAll(".node")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) {
+        return "translate(" + (d.x + -22) + "," + (d.y) + ")";
+      })
+
+    node.append("rect")
+      // .attr("width", 44)
+      .attr("width", function(d) {
+        if (d.name[0] == "I") {
+          return 100
+        } else {
+          return 44
+        }
+      })
+      .attr("height", 30)
+      .attr("x", function(d) {
+        if (d.name[0] == "I") {
+          return -25
+        } else {
+          return 0
+        }
+      })
+      .attr("rx", function(d) {
+        if (d.name[0] == "C") {
+          return 22
+        } else {
+          return 8
+        }
+      })
+      .attr("y", 0)
+      .attr("fill", function(d) {
+        if (d.name[0] == "C") {
+          return "#2990ca"
+        } else {
+          return "grey"
+        }
+      })
+
+    node.append("text")
+      .attr("dx", function(d) {
+        if (d.name[0] == "I") {
+          return 25
+        } else {
+          return 22
+        }
+      })
+      .attr("dy", 20)
+      .style("text-anchor", function(d) {
+        return "middle";
+      })
+      .style("fill", "#fff")
+      .text(function(d) {
+        return d.name;
+      });
+
+    node.on("click", function(d) {
+        if (d.name != "") {
+          // console.log(d.name);
+          // console.log(d.name.split('C')[1]);
+          piePlotNum = d.name.split('C')[1];
+          piePlot(piePlotNum);
+          // d3.select(this).attr("fill", "orange");
+        }
+      })
+      .on("mouseover", function(d) {
+        if (d.name != "") {
+          d3.select(this).attr("style", "cursor:hand");
+        }
+      });
+  </script>
+</body>
+
+</html>

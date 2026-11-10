@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="stylesheet" href="{% static 'css/PI.css' %}" type="text/css" />
+    <script
+      type="text/javascript"
+      src="{% static 'js/jquery.min.js' %}"
+    ></script>
+    <title>PI-api</title>
+  </head>
+
+  <body id="index" class="home">
+    <div>
+      <header>
+        <h1>PI-api</h1>
+
+        <nav>
+          <ul>
+            <li id="fun1"><a href="#">Elisa结果解析</a></li>
+            <li><a href="#">待开发</a></li>
+            <li><a href="#">待开发</a></li>
+            <li><a href="#">待开发</a></li> 
+          </ul>
+        </nav>
+      </header>
+
+      <div class="func-box" id="fun1-box">
+        
+        <form method="POST" action="/pi/result/" enctype="multipart/form-data">
+          {% comment %} {% csrf_token %} {% endcomment %}
+          <label>上传文件*：</label>
+          <input type="file" id="file-uploader" name="uploadfile" /><br />
+          <label>板子类型*：</label>
+          <select id="fun1-type" name="type">
+            <option value="nd">浓度</option>
+            <option value="pd">普通</option>
+          </select><br />
+          <label>请验单编号：</label>
+          <input id="qydbh" type="text" name="qydbh" placeholder="" /><br />
+          <label>项目编号：</label>
+          <input id="xmbh" type="text" name="xmbh" placeholder="" /><br />
+          <label>检测编号：</label>
+          <input id="jcbh" type="text" name="jcbh" placeholder="" /><br />
+          <label>检测项目：</label>
+          <input id="jcxm" type="text" name="jcxm" placeholder="" /><br />
+          <label>检测依据：</label>
+          <input id="jcyj" type="text" name="jcyj" placeholder="" /><br />
+          
+          <input id="tj" class="submit" type="submit" value="提 交" />
+          <div class="fun-pic"><p>eg:</p>
+            <img id="fun1-pic" src="/static/media/nd.png" alt="">
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      
+      $("#fun1").click(function(){
+        $("#fun1-box").toggle();
+      });
+
+      var urlParams = new URLSearchParams(window.location.search);
+      var elementId = urlParams.get('element');
+      if (elementId === 'fun1-box') {
+        document.getElementById('fun1-box').style.display = 'block';
+      } else if (elementId === 'fun2-box') {
+        document.getElementById('fun2-box').style.display = 'block';
+      } else{
+        $("#fun1-box").hide();
+      };
+
+      $('#fun1-type').change(function() {
+        selected = $('#fun1-type').val();
+        $('#fun1-pic').show();
+        var headUrl = '/static/media/';
+        headUrl = headUrl.concat(selected);
+        headUrl = headUrl.concat('.png');
+        console.log(headUrl);
+        $('#fun1-pic').attr('src', headUrl);
+      });
+    </script>
+  </body>
+</html>

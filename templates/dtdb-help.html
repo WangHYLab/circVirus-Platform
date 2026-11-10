@@ -1,0 +1,127 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/dtdb.ico' %}" />
+  <link rel="stylesheet" href="{% static '/css/dtdb.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <title>DTDB</title>
+</head>
+
+<body>
+  <div>
+    <header id="banner">
+      <h1>
+        <a href="/dtdb/"><span class="t1">D</span>rug <span class="t1">T</span>ree <span class="t1">D</span>ata<span class="t1">B</span>ase</a>
+      </h1>
+
+      <nav>
+        <ul>
+          <li><a href="/dtdb/">Home</a></li>
+          <li><a href="/dtdb/search/">Search</a></li>
+          <li><a href="/dtdb/browser/">Browser</a></li>
+          <li><a href="/dtdb/download/">Downloads</a></li>
+          <li class="active"><a href="/dtdb/help/">Help</a></li>
+
+          <form class="q-search-form" action="/dtdb/query/" method="GET" id="searchbox">
+            <!-- <input class="submit" type="submit" value="Quick Search"> -->
+            <span id="nav-text">drug:</span>
+            <input id="q-search" type="text" name="drug" placeholder="e.g. Erlotinib">
+
+          </form>
+        </ul>
+      </nav>
+
+    </header>
+
+    <section id="help">
+      <p class="title-one">Database Tutorial</p>
+
+      <ol class="ol1">
+        <li>How to search in Drug Tree Database</li>
+        <ul>
+          <li>Quick search entry on each page</li>
+          <p>In order to enable users to search our database easily and quickly,
+            we have set up a search portal on each page of the database, which
+            is located on the right side of the top navigation bar. The search
+            box allows users to search for either the drug name or drug id.
+            detailed drug ids can be viewed on the browse page or downloaded
+            from the download page to view our drug information file.</p>
+          <li>Similarity search for drugs, cell lines, and cancer types on the Search page</li>
+          <p>We provide a convenient search portal for the results of similarity analysis
+            on the search page. Simply select the type of similarity searched (drug,
+            cancer cell line and cancer type) in the navigation bar to retrieve access to our
+            different similarity analysis results.</p>
+          <li>Precise search on Browser page</li>
+          <p>On the browse page, users can directly select a drug of interest and
+            click on the drug ID to search for information on the pharmacological
+            classification tree of that drug.</p>
+
+        </ul>
+        <li class="">How to download data in Drug Tree Database</li>
+        <ul>
+          <li>Download the primary data</li>
+          <p>The raw data we use are from major public databases and can be downloaded
+            directly from our download page. It is also possible to download
+            the latest version of the data from the source database, if available.</p>
+          <li>Download the processed data</li>
+          <p>The pre-processed data is simply processed, including unifying formats,
+            converting lists to matrices, integrating public datasets, etc.</p>
+          <li>Download the analyzed data</li>
+          <p>The analyzed data include pharmacological classification trees with
+            data related to genomic alterations (mutations, fusions) or gene expression.
+            It is worth mentioning that each column is described in detail in the
+            header of each file for easy understanding and reuse by the user.</p>
+        </ul>
+        <li class="">How to use the pharmacological classification tree</li>
+        <ul>
+          <li>Identification of novel tumor subtypes</li>
+          <p>By searching for the drug, we can observe the pharmacological classification
+            tree of the drug on the results page. Further, we can view the tumor
+            types for each pharmacological subtype. As well as explore the tumor
+            type distribution trends of pharmacological subtypes based on drug
+            sensitivity and resistance trends.</p>
+          <li>Discovery of molecular mechanisms of pharmacological subtypes</li>
+          <p>On the right side of the result page we can very easily understand
+            the molecular mechanism of the pharmacological classification tree of
+            the drug, consisting of genomic alterations and gene expression.
+            Orange color indicates positive, i.e. the proportion of alterations
+            or expression tends to decrease with decreasing drug sensitivity.
+            Blue indicates negative, i.e. the proportion of alterations or
+            expression tends to increase as drug sensitivity decreases. Note
+            that we removed the intermediate subtypes with mixed drug resistance
+            and sensitivity. Click etc. to expand the genes not shown in full.
+          </p>
+        </ul>
+        <li class="">How to contact us</li>
+        <ul>
+          <li>Contact the laboratory</li>
+          <p><a class="a-italic" href="https://life.tongji.edu.cn/03/45/c12620a131909/page.htm">Haiyun Wang's Lab</a> at the <a class="a-italic" href="https://life.tongji.edu.cn/">School of Life Science and Technology</a>, <a class="a-italic"
+              href="https://www.tongji.edu.cn/">Tongji University,
+              shanghai,China</a>.</p>
+          <li>Contact the developer and maintainer</li>
+          <p>You can contact the developer (J Zheng) at this email address below at any time. Please note the intention in the email.</p>
+          <p class="a-italic bpcolor">1931524@tongji.edu.cn</p>
+        </ul>
+      </ol>
+
+    </section>
+
+
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>DTDB is developed by the <a href="https://life.tongji.edu.cn/03/45/c12620a131909/page.htm">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji
+          University</a>, Shanghai, China.</p>
+      <p class="beian">ICP证：<a href="https://beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,764 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/vcRNAdb.ico' %}" />
+  <link rel="stylesheet" href="{% static 'css/main-table.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <title>vcRNA Database</title>
+</head>
+
+<body id="index" class="home">
+  <div>
+    <header id="banner">
+      <h1><a href="/vcRNAdb/">Viral-circRNA Database</a></h1>
+
+      <nav>
+        <ul>
+
+          <li><a href="/vcRNAdb/">Home</a></li>
+          <li><a href="/search/">Search</a></li>
+          <li class="active"><a href="/browser/">Browser</a></li>
+          <li><a href="/download/">Downloads</a></li>
+          <li><a href="/statistic/" />Statistics</a></li>
+          <li><a href="/help/">Help</a></li>
+        </ul>
+      </nav>
+
+    </header>
+    <section id="statistical-item" style="display:none">
+      <div>
+        <p class="p1">Statistical Information</p>
+        <p>Quantity : <b>520</b></p>
+        <p>Number of Annotation Gene : <b>25</b></p>
+        <p>length : <b>134 - 13209</b></p>
+        <p>Number of Studies : <b>4</b></p>
+        <p>Sample Classification : <b>10</b></p>
+      </div>
+
+    </section>
+    <section id="search-item">
+      <div>
+        <p>Total items: <b>{{ uniqueNum }}</b></p>
+      </div>
+
+      <div id="filter-box">
+        <label for="filter" id="filtlabel">
+          Filter:
+        </label>
+        <select name="" id="filter-select">
+          <option value="1">Virus</option>
+          <option value="2">Genome</option>
+          <option value="3">Strand</option>
+          <option value="4">Start</option>
+          <option value="5">End</option>
+          <option value="6">Length</option>
+          <!-- <option value="7">Sample</option> -->
+          <option value="7">Avg_CPM &gt;=</option>
+          <option value="8">Avg_junction_reads &gt;=</option>
+
+          <option value="9">Annotation Gene</option>
+          <option value="10">Annotation Region</option>
+          <option value="11">Study</option>
+          <option value="12">Study-run</option>
+        </select>
+        <input class="filter" id="filter" type="text">
+        <input class="filterButton" id="filterButton" type="button" value="Filter">
+        <input class="resetButton" id="resetButton" type="button" value="Reset">
+        <a id="downloadA"><input class="downloadButton" id="downloadButton" type="button" value="Download"></a><br>
+        <label for="filter" id="filter-label2">
+          After filtering : <span id="filter-num"></span> records in total.
+        </label>
+      </div>
+    </section>
+    <section id="table-box">
+      <div>
+        <table id="browser-table">
+          <tr>
+            <th class="tigle">Id
+              <span>
+                <div id="id-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="id-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Virus
+              <span>
+                <div id="virus-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="virus-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Genome
+              <span>
+                <div id="genome-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="genome-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Strand
+              <span>
+                <div id="strand-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="strand-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Start Position
+              <span>
+                <div id="start-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="start-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">End Position
+              <span>
+                <div id="end-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="end-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Splice Length
+              <span>
+                <div id="length-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="length-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+
+            <th class="tigle" title="Average junction reads count per million extracted reads">Avg_CPM
+              <span>
+                <div id="Avg_CPM-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="Avg_CPM-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle" title="Average junction reads">Avg_junction_reads
+              <span>
+                <div id="Avg_junction_reads-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="Avg_junction_reads-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Tissue Type
+              <span>
+                <div id="sample-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="sample-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <!-- <th class="tigle" title="Junction reads">JR
+              <span>
+                <div id="score-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="score-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle" title="Junction_reads_ratio">JRR
+              <span>
+                <div id="jrr-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="jrr-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th> -->
+
+            <th class="tigle">Gene
+              <span>
+                <div id="annotationGene-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="annotationGene-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Region
+              <span>
+                <div id="annotationRegion-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="annotationRegion-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle" title="Supported samples">Supported samples
+              <span>
+                <div id="supportedSamples-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="supportedSamples-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <!-- <th class="tigle">Study
+              <span>
+                <div id="study-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="study-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Study-run
+              <span>
+                <div id="studyRun-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="studyRun-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+          </tr> -->
+            <tbody id="tbody">
+              {% for line in terms %}
+              <tr>
+                <td title="{{line.Circ_id}}"><a href="/detail/?Circ_id={{line.Circ_id}}">{{line.Circ_id}}</a></td>
+                <td>{{line.Virus}}</td>
+                <td>{{line.Genome}}</td>
+                <td>{{line.Strand}}</td>
+                <td>{{line.Splice_start}}</td>
+                <td>{{line.Splice_end}}</td>
+                <td>{{line.Splice_length}}</td>
+                <td>{{line.Avg_CPM}}</td>
+                <td>{{line.Avg_junction_reads}}</td>
+                <td title="{{line.Sample}}">{{line.Sample}}</td>
+                <!-- <td>{{line.Junction_reads}}</td>
+                <td title="{{line.Junction_reads_ratio}}">{{line.Junction_reads_ratio}}</td> -->
+                <td title="{{line.Annotation_gene}}">{{line.Annotation_gene}}</td>
+                <td title="{{line.Annotation_region}}">{{line.Annotation_region}}</td>
+                <td title="{{line.Annotation_region}}">{{line.Supported_samples}}</td>
+                <!-- <td title="{{line.Study}}">{{line.Study}}</td>
+                <td title="{{line.Study_run}}">{{line.Study_run}}</td> -->
+              </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </section>
+    <section id="switch-main">
+      <div class="">
+        <div id="pageSwitch">
+          <div id="next">Next</div>
+          <div id="previous">Previous</div>
+          <div class="page-left">
+            <form>Number of items each page：<input id="itemNum" type="text" value="15" /></form>
+          </div>
+          <div class="page-left" id="page-item-num">Go</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  </div>
+  <footer>
+    <p class="beian">ICP证：<a href="http://www.beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+  </footer>
+  <script type="text/javascript">
+    $("#tbody").children().hide();
+    // var pageItemNum=parseInt($("#itemNum").attr("value"));
+    var pageItemNum = 15
+    var itemLen = $("#tbody").children().length;
+    var nowPage = 1;
+    var pageNum;
+    var trendcy; //1为下一页，0为上一页
+    if (itemLen % pageNum == 0) {
+      pageNum = itemLen / pageItemNum;
+    } else {
+      pageNum = itemLen / pageItemNum + 1;
+    };
+
+    $("#itemNum").change(function() {
+      console.log($("#itemNum").attr("value"));
+      pageItemNum = parseInt(document.getElementById("itemNum").value);
+      if (itemLen % pageNum == 0) {
+        pageNum = itemLen / pageItemNum;
+      } else {
+        pageNum = itemLen / pageItemNum + 1;
+      };
+      nowPage = 1;
+      $("#tbody").children().hide();
+      tablePartShow(pageNum, 0, itemLen, 1, pageItemNum);
+      nowPage = 1;
+      console.log($("#itemNum").attr("value"));
+    });
+
+    // 点击下一页
+    $("#next").click(function() {
+      if (nowPage < pageNum - 1 && pageItemNum < itemLen) {
+        $("#tbody").children().hide();
+        var trend = 1;
+        if (trendcy == 0) {
+          nowPage = nowPage + 1;
+        }
+        tablePartShow(pageNum, nowPage, itemLen, trend, pageItemNum);
+        nowPage = nowPage + 1;
+      }
+    });
+    // 点击上一页
+    $("#previous").click(function() {
+      if (nowPage >= 1 && pageItemNum < itemLen) {
+        $("#tbody").children().hide();
+        var trend = 0;
+        if (trendcy == 1) {
+          nowPage = nowPage - 1;
+        }
+        tablePartShow(pageNum, nowPage, itemLen, trend, pageItemNum);
+        nowPage = nowPage - 1;
+      }
+    });
+    // 翻页函数
+    function tablePartShow(pageNum, nowPage, itemLen, trend, pageItemNum) {
+      // console.log(nowPage);
+      if (trend == 1) {
+        for (var i = nowPage * pageItemNum; i < Math.min((nowPage + 1) * pageItemNum, itemLen); i++) {
+          $("#tbody").children().eq(i).show();
+        }
+        trendcy = 1;
+      } else {
+        for (var i = nowPage * pageItemNum - 1; i >= Math.max((nowPage - 1) * pageItemNum, 0); i--) {
+          $("#tbody").children().eq(i).show();
+        }
+        trendcy = 0;
+      }
+    };
+
+    $(document).ready(function() {
+      $('table').hide();
+      $("#total-number").text(itemLen);
+      tablePartShow(pageNum, 0, itemLen, 1, pageItemNum);
+      nowPage = 1;
+      $('#load').delay(8000).hide();
+      $('table').show();
+
+      $('#id-up').click(function() {
+        /*1表示升序排列*/
+        $("#id-up").css("border-bottom", "8px solid #626666");
+        $("#id-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 0);
+      });
+
+      $('#id-down').click(function() {
+        /*0表示降序排列*/
+        $("#id-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#id-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 0);
+      });
+
+      $('#virus-up').click(function() {
+        /*1表示升序排列*/
+        $("#virus-up").css("border-bottom", "8px solid #626666");
+        $("#virus-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 1);
+      });
+
+      $('#virus-down').click(function() {
+        /*0表示降序排列*/
+        $("#virus-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#virus-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 1);
+      });
+
+      $('#genome-up').click(function() {
+        /*1表示升序排列*/
+        $("#genome-up").css("border-bottom", "8px solid #626666");
+        $("#genome-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 2);
+      });
+
+      $('#genome-down').click(function() {
+        /*0表示降序排列*/
+        $("#genome-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#genome-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 2);
+      });
+
+      $('#strand-up').click(function() {
+        /*1表示升序排列*/
+        $("#strand-up").css("border-bottom", "8px solid #626666");
+        $("#strand-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 3);
+      });
+
+      $('#strand-down').click(function() {
+        /*0表示降序排列*/
+        $("#strand-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#strand-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 3);
+      });
+
+      $('#start-up').click(function() {
+        /*1表示升序排列*/
+        $("#start-up").css("border-bottom", "8px solid #626666");
+        $("#start-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 4);
+      });
+
+      $('#start-down').click(function() {
+        /*0表示降序排列*/
+        $("#start-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#start-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 4);
+      });
+
+      $('#end-up').click(function() {
+        /*1表示升序排列*/
+        $("#end-up").css("border-bottom", "8px solid #626666");
+        $("#end-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 5);
+      });
+
+      $('#end-down').click(function() {
+        /*0表示降序排列*/
+        $("#end-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#end-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 5);
+      });
+
+      $('#length-up').click(function() {
+        /*1表示升序排列*/
+        $("#length-up").css("border-bottom", "8px solid #626666");
+        $("#length-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 6);
+      });
+
+      $('#length-down').click(function() {
+        /*0表示降序排列*/
+        $("#length-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#length-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 6);
+      });
+
+      $('#Avg_CPM-up').click(function() {
+        /*1表示升序排列*/
+        $("#Avg_CPM-up").css("border-bottom", "8px solid #626666");
+        $("#Avg_CPM-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 7);
+      });
+
+      $('#Avg_CPM-down').click(function() {
+        /*0表示降序排列*/
+        $("#Avg_CPM-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#Avg_CPM-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 7);
+      });
+      $('#Avg_junction_reads-up').click(function() {
+        /*1表示升序排列*/
+        $("#Avg_junction_reads-up").css("border-bottom", "8px solid #626666");
+        $("#Avg_junction_reads-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 8);
+      });
+
+      $('#Avg_junction_reads-down').click(function() {
+        /*0表示降序排列*/
+        $("#Avg_junction_reads-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#Avg_junction_reads-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 8);
+      });
+
+      $('#sample-up').click(function() {
+        /*1表示升序排列*/
+        $("#sample-up").css("border-bottom", "8px solid #626666");
+        $("#sample-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 9);
+      });
+
+      $('#sample-down').click(function() {
+        /*0表示降序排列*/
+        $("#sample-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#sample-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 9);
+      });
+
+      $('#score-up').click(function() {
+        /*1表示升序排列*/
+        $("#score-up").css("border-bottom", "8px solid #626666");
+        $("#score-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 10);
+      });
+
+      $('#score-down').click(function() {
+        /*0表示降序排列*/
+        $("#score-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#score-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 10);
+      });
+
+      $('#jrr-up').click(function() {
+        /*1表示升序排列*/
+        $("#jrr-up").css("border-bottom", "8px solid #626666");
+        $("#jrr-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 11);
+      });
+
+      $('#jrr-down').click(function() {
+        /*0表示降序排列*/
+        $("#jrr-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#jrr-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 11);
+      });
+
+      $('#strand-up').click(function() {
+        /*1表示升序排列*/
+        $("#strand-up").css("border-bottom", "8px solid #626666");
+        $("#strand-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 3);
+      });
+
+      $('#strand-down').click(function() {
+        /*0表示降序排列*/
+        $("#strand-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#strand-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 3);
+      });
+
+
+      $('#annotationGene-up').click(function() {
+        /*1表示升序排列*/
+        $("#annotationGene-up").css("border-bottom", "8px solid #626666");
+        $("#annotationGene-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 10);
+      });
+
+      $('#annotationGene-down').click(function() {
+        /*0表示降序排列*/
+        $("#annotationGene-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#annotationGene-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 10);
+      });
+
+      $('#annotationRegion-up').click(function() {
+        /*1表示升序排列*/
+        $("#annotationRegion-up").css("border-bottom", "8px solid #626666");
+        $("#annotationRegion-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 11);
+      });
+
+      $('#annotationRegion-down').click(function() {
+        /*0表示降序排列*/
+        $("#annotationRegion-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#annotationRegion-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 11);
+      });
+
+      //supportedSamples
+      $('#supportedSamples-up').click(function() {
+        /*1表示升序排列*/
+        $("#supportedSamples-up").css("border-bottom", "8px solid #626666");
+        $("#supportedSamples-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 12);
+      });
+
+      $('#supportedSamples-down').click(function() {
+        /*0表示降序排列*/
+        $("#supportedSamples-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#supportedSamples-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 12);
+      });
+
+      $('#study-up').click(function() {
+        /*1表示升序排列*/
+        $("#study-up").css("border-bottom", "8px solid #626666");
+        $("#study-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 15);
+      });
+
+      $('#study-down').click(function() {
+        /*0表示降序排列*/
+        $("#study-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#study-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 15);
+      });
+
+      $('#studyRun-up').click(function() {
+        /*1表示升序排列*/
+        $("#studyRun-up").css("border-bottom", "8px solid #626666");
+        $("#studyRun-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 16);
+      });
+
+      $('#studyRun-down').click(function() {
+        /*0表示降序排列*/
+        $("#studyRun-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#studyRun-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 16);
+      });
+
+      function sortFun(attrCd_listSort, n) {
+        var trs = [];
+        var tbody = document.getElementById("tbody");
+        var allRows = tbody.rows;
+        for (var i = 0; i < allRows.length; i++) {
+          trs.push(allRows[i]);
+        }
+
+        trs.sort(function(tr1, tr2) {
+          var date1 = $.trim($(tr1).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+          var date2 = $.trim($(tr2).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+
+          if (attrCd_listSort == 1) {
+            if (date1 < date2) {
+              return -1;
+            } else {
+              return 1;
+            }
+          } else {
+            if (date1 < date2) {
+              return 1;
+            } else {
+              return -1;
+            }
+          }
+        });
+        for (var i = 0; i < trs.length; i++) {
+          tbody.appendChild(trs[i]);
+        }
+      }
+
+      function sortFunParseFloat(attrCd_listSort, n) {
+        var trs = [];
+        var tbody = document.getElementById("tbody");
+        var allRows = tbody.rows;
+        for (var i = 0; i < allRows.length; i++) {
+          trs.push(allRows[i]);
+        }
+
+        trs.sort(function(tr1, tr2) {
+          var date1 = $.trim($(tr1).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+          var date2 = $.trim($(tr2).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+
+          if (attrCd_listSort == 1) {
+            if (parseFloat(date1) < parseFloat(date2)) {
+              return -1;
+            } else {
+              return 1;
+            }
+          } else {
+            if (parseFloat(date1) < parseFloat(date2)) {
+              return 1;
+            } else {
+              return -1;
+            }
+          }
+        });
+
+        for (var i = 0; i < trs.length; i++) {
+          tbody.appendChild(trs[i]);
+        }
+      };
+    });
+
+    //filter
+    var tableRow = [];
+    var tableAfterFilter = [];
+    var tableFilter = [];
+    var tBody = document.getElementById("tbody");
+    var allRows = tbody.rows;
+    for (var i = 0; i < allRows.length; i++) {
+      tableRow.push(allRows[i]);
+    }
+
+    function deleteAllRow(table) {
+      for (var i = 0; i < table.length; i++) {
+        document.getElementById("tbody").deleteRow(0);
+      }
+    };
+
+    var tableBeforeFilter = tableRow;
+    $("#resetButton").click(function() {
+      location.reload();
+    });
+
+    $("#filterButton").click(function() {
+      $('#statistical-item').hide();
+      var filterContent = document.getElementById("filter").value;
+      var filterItem = parseInt(document.getElementById("filter-select").value);
+      document.getElementById("itemNum").value
+      console.log("change");
+      deleteAllRow(tableBeforeFilter);
+
+      var tableAfterFilter = [];
+      if (filterItem == 8) {
+        for (var i = 0; i < tableBeforeFilter.length; i++) {
+          var itemInTable = parseFloat($.trim($(tableBeforeFilter[i]).find('td:eq(' + filterItem + ')').text()));
+          filterContent = parseFloat(filterContent);
+          if (itemInTable >= filterContent) {
+            tableAfterFilter.push(tableBeforeFilter[i]);
+          }
+        };
+      } else if (filterItem == 9) {
+        for (var i = 0; i < tableBeforeFilter.length; i++) {
+          var itemInTable = Math.abs(parseFloat($.trim($(tableBeforeFilter[i]).find('td:eq(' + filterItem + ')').text())));
+          filterContent = Math.abs(parseFloat(filterContent));
+          filterContent = parseFloat(filterContent);
+          if (itemInTable >= filterContent) {
+            tableAfterFilter.push(tableBeforeFilter[i]);
+          }
+        };
+      } else if (filterItem == 100) {
+        for (var i = 0; i < tableBeforeFilter.length; i++) {
+          var itemInTable = Math.abs(parseFloat($.trim($(tableBeforeFilter[i]).find('td:eq(' + filterItem + ')').text())));
+          filterContent = Math.abs(parseFloat(filterContent));
+          filterContent = parseFloat(filterContent);
+          if (itemInTable >= filterContent) {
+            tableAfterFilter.push(tableBeforeFilter[i]);
+          }
+        };
+      } else {
+        for (var i = 0; i < tableBeforeFilter.length; i++) {
+          var itemInTable = $.trim($(tableBeforeFilter[i]).find('td:eq(' + filterItem + ')').text());
+          if (itemInTable === filterContent || itemInTable.indexOf(filterContent) != -1) {
+            tableAfterFilter.push(tableBeforeFilter[i]);
+          }
+        };
+      };
+
+      tableBeforeFilter = tableAfterFilter;
+      for (var i = 0; i < tableAfterFilter.length; i++) {
+        document.getElementById("tbody").appendChild(tableAfterFilter[i]);
+      };
+      console.log(tableAfterFilter);
+      $("#filter-num").text(tableAfterFilter.length);
+      $("#filter-label2").show();
+      $("#tbody").children().hide();
+
+      pageItemNum = parseInt($("#itemNum").attr("value"));
+      itemLen = $("#tbody").children().length;
+      nowPage = 1;
+      if (itemLen % pageNum == 0) {
+        pageNum = itemLen / pageItemNum;
+      } else {
+        pageNum = itemLen / pageItemNum + 1;
+      };
+      tablePartShow(pageNum, 0, itemLen, 1, pageItemNum);
+      nowPage = 1;
+    });
+    //download
+    $("#downloadButton").click(function() {
+      var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementById('browser-table').outerHTML + "</body></html>";
+      html = html.replace(/none/g, "table-row");
+      var blob = new Blob([html], {
+        type: "application/vnd.ms-excel"
+      });
+      var a = $("#downloadA")[0]
+      // 利用URL.createObjectURL()方法为a元素生成blob URL
+      a.href = URL.createObjectURL(blob);
+      // 设置文件名
+      a.download = "CircVirus-table.xls";
+    });
+  </script>
+</body>
+
+</html>

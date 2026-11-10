@@ -1,0 +1,85 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/vcRNAdb.ico' %}" />
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <title>vcRNA Database</title>
+</head>
+
+<body id="index" class="home">
+  <div>
+    <header id="banner">
+      <h1><a href="/vcRNAdb/">Viral-circRNA Database</a></h1>
+
+      <nav>
+        <ul>
+
+          <li><a href="/vcRNAdb/">Home</a></li>
+          <li><a href="/search/">Search</a></li>
+          <li><a href="/browser/">Browser</a></li>
+          <li class="active"><a href="/download/">Downloads</a></li>
+          <li><a href="/statistic/">Statistics</a></li>
+          <li><a href="/help/">Help</a></li>
+        </ul>
+      </nav>
+
+    </header>
+
+    <section id="mail">
+      <div id="mailbox">
+        <form method="get" action="/downloadbymail/" onSubmit="return check();">
+
+          <h3>Input your mail address to download all items of the database.</h3><br>
+          <input onkeydown="if(event.keyCode==13){event.keyCode=0;event.returnValue=false;}" id="mailadderss" type="text" name="mailaddress" placeholder="e.g. 111111@gmail.com">
+          <input id="submit" class="submit" type="submit" value="DOWNLOAD">
+        </form>
+
+      </div>
+    </section>
+    <script type="text/javascript" src="//rf.revolvermaps.com/0/0/8.js?i=5i4c63qrx68&amp;m=0&amp;c=ff0000&amp;cr1=ffffff&amp;f=arial&amp;l=33" async="async"></script>
+
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>Viral-circRNA Database is developed by the <a href="http://life.tongji.edu.cn/Data/View/1488">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji University, Shanghai, China</a>.</p>
+      <p class="beian">ICP证：<a href="http://www.beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+
+  </div>
+  <script type="text/javascript">
+    var mail = $('#mailadderss').val();
+    $('#mailadderss').change(function() {
+      mail = $('#mailadderss').val();
+      console.log(mail);
+    });
+
+    function checkMail(string) {
+      var pattern = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+      out = pattern.test(string);
+      if (out == false) {
+        alert('please input the corret mail address!');
+        $('#mailadderss').focus();
+        return 0;
+      } else {
+        return 1;
+      }
+    };
+
+    function check() {
+      if (checkMail(mail) == 1) {
+        return true;
+      } else {
+        return false;
+      };
+    };
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,10 @@
+body {
+  background: #F5F9FF;
+  color: #000305;
+  font-size: 87.5%;
+  /* Base font size: 14px */
+  line-height: 1.4;
+  text-align: left;
+  width: 800px;
+  margin: 0 auto;
+}

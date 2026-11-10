@@ -1,0 +1,228 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/dtdb.ico' %}" />
+  <link rel="stylesheet" href="{% static '/css/dtdb.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <title>DTDB</title>
+</head>
+
+<body>
+  <div>
+    <header id="banner">
+      <h1>
+        <a href="/dtdb/"><span class="t1">D</span>rug <span class="t1">T</span>ree <span class="t1">D</span>ata<span class="t1">B</span>ase</a>
+      </h1>
+
+      <nav>
+        <ul>
+          <li><a href="/dtdb/">Home</a></li>
+          <li class="active"><a href="/dtdb/search/">Search</a></li>
+          <li><a href="/dtdb/browser/">Browser</a></li>
+          <li><a href="/dtdb/download/">Downloads</a></li>
+          <li><a href="/dtdb/help/">Help</a></li>
+
+          <form class="q-search-form" action="/dtdb/dquery/" method="GET" id="searchbox">
+            <!-- <input class="submit" type="submit" value="Quick Search"> -->
+            <select id="search-mode" class="search-mode" name="search-mode">
+              <option value="Drug">Drug</option>
+              <option value="ccl">Cancer Cell Line</option>
+              <option value="Cancer Type">Cancer Type</option>
+            </select>
+            <span id="nav-text">:</span>
+            <input id="q-search" type="text" name="drug" placeholder="e.g. Erlotinib">
+
+          </form>
+        </ul>
+      </nav>
+
+    </header>
+
+    <section id="search">
+      <b class="search-info">NOTE: </b>
+      <p class="search-info">&nbspThe search page is designed to retrieve the results of
+        similarity analysis, including cell line similarity, drug similarity,
+        and cancer type similarity based on cell line similarity.</p>
+      <p class="search-info descrption">&nbsp(eg. Drug: Erlotinib)</p>
+      <div id="drug-table" style="overflow:auto">
+        <table id="result-table">
+          <tr>
+            <th class="tigle">Drug Id</th>
+            <th class="tigle">Drug Name</th>
+            <th class="tigle">Similarity</th>
+            <th class="tigle">Synonyms</th>
+            <th class="tigle">Target</th>
+            <th class="tigle">Target Pathway</th>
+          </tr>
+          <tbody id="drug-tbody">
+            {% for line in drug_terms %}
+            <tr>
+              <td class="td-id" title="{{line.drugId2}}"><a href="/dtdb/query/?drug={{line.drugId2}}">{{line.drugId2}}</a></td>
+              <td>{{line.drugName2}}</td>
+              <td>{{line.similarity}}</td>
+              <td>{{line.synonyms}}</td>
+              <td>{{line.target}}</td>
+              <td>{{line.targetPathway}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div id="ccl-table" style="overflow:auto">
+        <table id="result-table">
+          <tr>
+            <th class="tigle">Cell line</th>
+            <th class="tigle">Cosmic Id</th>
+            <th class="tigle">Similarity</th>
+            <th class="tigle">TCGA abbreviation</th>
+
+          </tr>
+          <tbody id="ccl-tbody">
+            {% for line in ccl_terms %}
+            <tr>
+              <td>{{line.ccl2name}}</td>
+              <td class="td-id" title="{{line.ccl2}}"><a href="https://cancer.sanger.ac.uk/cell_lines/sample/overview?id={{line.ccl2}}">{{line.ccl2}}</a></td>
+              <td>{{line.similarity}}</td>
+              <td>{{line.TCGA}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div id="ct-table" style="overflow:auto">
+        <table id="result-table">
+          <tr>
+            <th class="tigle">Cancer type</th>
+            <th class="tigle">Cluster</th>
+            <th class="tigle">Cellline number in this cluster (click to show celllines)</th>
+            <th class="tigle">P value</th>
+
+          </tr>
+          <tbody id="ct-tbody">
+            {% for line in ct_terms %}
+            <tr>
+              <td id="{{line.ct}}">{{line.ct}}</td>
+              <td>{{line.cluster}}</td>
+              <td class="cluster-num">{{line.num}}</td>
+              <td>{{line.p}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div id="ct-child-table" style="overflow:auto">
+        <table id="result-table">
+          <tr>
+            <th class="tigle">Cell line</th>
+            <th class="tigle">Cosmic Id</th>
+            <th class="tigle">Cluster</th>
+            <th class="tigle">TCGA abbreviation</th>
+          </tr>
+          <tbody id="ct-child-tbody">
+
+          </tbody>
+        </table>
+      </div>
+
+
+
+    </section>
+
+
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>DTDB is developed by the <a href="https://life.tongji.edu.cn/03/45/c12620a131909/page.htm">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji
+          University</a>, Shanghai, China.</p>
+      <p class="beian">ICP证：<a href="https://beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+
+  </div>
+  <script type="text/javascript">
+    $("#search-mode").change(function() {
+      var mode = $("#search-mode").val();
+
+      if (mode == "Drug") {
+        $("#q-search").attr("placeholder", "e.g. Erlotinib");
+        $("#q-search").attr("name", "drug");
+        $(".q-search-form").attr("action", "/dtdb/dquery/");
+        $("#search-mode").attr("class", "search-mode");
+      } else if (mode == "ccl") {
+        $("#search-mode").attr("class", "search-mode2");
+        $("#q-search").attr("name", "ccl");
+        $("#q-search").attr("placeholder", "e.g. BICR22");
+        $(".q-search-form").attr("action", "/dtdb/cclquery/")
+      } else if (mode == "Cancer Type") {
+        $("#q-search").attr("placeholder", "e.g. SCLC");
+        $("#q-search").attr("name", "ct");
+        $(".q-search-form").attr("action", "/dtdb/ctquery/");
+        $("#search-mode").attr("class", "search-mode3");
+      }
+      console.log(mode);
+    });
+
+    var drugtbody = document.getElementById("drug-tbody");
+    drugRows = drugtbody.rows;
+    if (drugRows.length == 0) {
+      $("#drug-table").hide();
+    };
+    var ccltbody = document.getElementById("ccl-tbody");
+    cclRows = ccltbody.rows;
+    if (cclRows.length == 0) {
+      $("#ccl-table").hide();
+    };
+    var cttbody = document.getElementById("ct-tbody");
+    ctRows = cttbody.rows;
+    if (ctRows.length == 0) {
+      $("#ct-table").hide();
+    };
+
+    $(document).ready(function() {
+      $("#ct-child-table").hide();
+      $(".cluster-num").click(function() {
+        $("#ct-child-table").show();
+        console.log($(this).text());
+        console.log($(this).prev().text());
+        console.log($(this).prev().prev().text());
+        var num = $(this).text();
+        var cluster = $(this).prev().text();
+        var cancerType = $(this).prev().prev().text();
+        $.get("/dtdb/getccl/", {
+          'cancerType': cancerType,
+          'cluster': cluster
+        }, function(ret) {
+          var obj = eval(ret);
+          console.log(obj);
+
+          var tbody = $('<tbody id="ct-child-tbody"></tbody>');
+
+          for (var i = 0; i < obj.length; i++) {
+            var tr = $('<tr></tr>');
+            tr.append(
+              '<td>' + obj[i]['Cellline'] + '</td>' +
+              '<td class="td-id"><a href="https://cancer.sanger.ac.uk/cell_lines/sample/overview?id=' + obj[i]['CosmicId'] + '">' + obj[i]['CosmicId'] + '</a></td>' +
+              '<td>' + obj[i]['Cluster'] + '</td>' +
+              '<td>' + obj[i]['TCGAabbr'] + '</td>');
+            console.log(tr);
+            tbody.append(tr);
+          }
+          $('#ct-child-tbody').replaceWith(tbody);
+        })
+      });
+    });
+
+    // $('.cluster-num').click(function() {
+    //   console.log($(this).text());
+    //   console.log($(this).prev().text());
+    // })
+  </script>
+</body>
+
+</html>

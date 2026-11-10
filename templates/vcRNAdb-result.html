@@ -1,0 +1,977 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/vcRNAdb.ico' %}" />
+  <link rel="stylesheet" href="{% static 'css/main-table.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/main-plot.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/exporting.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/echarts.min.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/genome.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/plotcv.js' %}"></script>
+  <title>vcRNA Database</title>
+</head>
+
+<body id="index" class="home">
+  <div>
+    <header id="banner">
+      <h1><a href="/vcRNAdb/">Viral-circRNA Database</a></h1>
+      <nav>
+        <ul>
+          <li><a href="/vcRNAdb/">Home</a></li>
+          <li><a href="/search/">Search</a></li>
+          <li><a href="/browser/">Browser</a></li>
+          <li><a href="/download/">Downloads</a></li>
+          <li><a href="/statistic/">Statistics</a></li>
+          <li><a href="/help/">Help</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section id="search-item">
+      <div>
+        <p>Search : <b>{{ item }}</b></p>
+        <p>Find items: <b>{{ uniqueNum }}</b></p>
+      </div>
+
+      <div id="filter-box">
+        <label for="filter" id="filtlabel">
+          Filter:
+        </label>
+        <select name="" id="filter-select">
+          <option value="1">Virus</option>
+          <!-- <option value="2">Genome</option> -->
+          <option value="4">Start</option>
+          <option value="5">End</option>
+          <option value="6">Length</option>
+          <option value="5">Sample</option>
+          <option value="7">Avg_CPM &gt;=</option>
+          <option value="8">Avg_junction_reads &gt;=</option>
+          <option value="3">Strand</option>
+          <option value="9">Gene</option>
+          <option value="10">Sample</option>
+          <!-- <option value="12">Study</option> -->
+        </select>
+        <input class="filter" id="filter" type="text">
+        <input class="filterButton" id="filterButton" type="button" value="Filter">
+        <input class="resetButton" id="resetButton" type="button" value="Reset">
+        <a id="downloadA"><input class="downloadButton" id="downloadButton" type="button" value="Download"></a>
+        <input class="SGBButton" id="SGBButton" type="button" value="Simple Genome Browser">
+        <br>
+
+        <label for="filter" id="filter-label2">
+          After filtering : <span id="filter-num"></span> records in total.
+        </label>
+      </div>
+    </section>
+
+    <section id="table-box">
+      <div style="overflow:auto">
+        <table id="result-table">
+          <tr>
+            <th class="tigle">Id
+              <span>
+                <div id="id-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="id-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Virus
+              <span>
+                <div id="virus-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="virus-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Genome
+              <span>
+                <div id="genome-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="genome-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Strand
+              <span>
+                <div id="strand-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="strand-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+
+            <th class="tigle">Start
+              <span>
+                <div id="start-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="start-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">End
+              <span>
+                <div id="end-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="end-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Length
+              <span>
+                <div id="length-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="length-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+
+            <th class="tigle" title="Average junction reads count per million extracted reads">Avg_CPM
+              <span>
+                <div id="Avg_CPM-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="Avg_CPM-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle" title="Average junction reads">Avg_junction_reads
+              <span>
+                <div id="Avg_junction_reads-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="Avg_junction_reads-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <!-- <th class="tigle" title="Junction_reads_ratio">JRR
+              <span>
+                <div id="jrr-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="jrr-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th> -->
+
+            <th class="tigle">Gene
+              <span>
+                <div id="annotationGene-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="annotationGene-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <!-- <th class="tigle">Region
+              <span>
+                <div id="annotationRegion-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="annotationRegion-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th> -->
+            <th class="tigle">Sample
+              <span>
+                <div id="sample-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="sample-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <!-- <th class="tigle" title="Junction_reads">Junction Reads
+              <span>
+                <div id="score-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="score-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th> -->
+
+            <!--  <th class="tigle">Study
+              <span>
+                <div id="study-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="study-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Study-run
+              <span>
+                <div id="studyRun-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="studyRun-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th> -->
+          </tr>
+          <tbody id="tbody">
+            {% for line in terms %}
+            <tr>
+              <td title="{{line.Circ_id}}"><a href="/detail/?Circ_id={{line.Circ_id}}">{{line.Circ_id}}</a></td>
+              <td>{{line.Virus}}</td>
+              <td>{{line.Genome}}</td>
+              <td>{{line.Strand}}</td>
+
+              <td>{{line.Splice_start}}</td>
+              <td>{{line.Splice_end}}</td>
+              <td>{{line.Splice_length}}</td>
+              <td>{{line.Avg_CPM}}</td>
+              <td>{{line.Avg_junction_reads}}</td>
+              <!-- <td title="{{line.Junction_reads_ratio}}">{{line.Junction_reads_ratio}}</td> -->
+              <td title="{{line.Annotation_gene}}">{{line.Annotation_gene}}</td>
+              <!-- <td title="{{line.Annotation_region}}">{{line.Annotation_region}}</td> -->
+              <td title="{{line.Sample}}">{{line.Sample}}</td>
+              <!-- <td>{{line.Junction_reads}}</td> -->
+              <!-- <td title="{{line.Study}}">{{line.Study}}</td>
+              <td title="{{line.Study_run}}">{{line.Study_run}}</td> -->
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="switch-main">
+      <div class="">
+        <div id="pageSwitch">
+          <div id="next">Next</div>
+          <div id="previous">Previous</div>
+          <div class="page-left">
+            <form>Number of items each page：<input id="itemNum" type="text" value="15" /></form>
+          </div>
+          <div class="page-left" id="page-item-num">Go</div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div id="plot-box">
+    <!-- legend -->
+    <div class="result-legend-box">
+      <div class="result-strand-pos">
+        <div class="result-legend" id="result-pos-strand"></div>
+        <div id="result-pos">Strand +</div>
+      </div>
+      <div class="result-strand-neg">
+        <div class="result-legend" id="result-neg-strand"></div>
+        <div id="result-neg">Strand -</div>
+      </div>
+    </div>
+
+    <div class="plot" id="plot-neg">
+
+    </div>
+    <div class="plot" id="plot-pos">
+
+    </div>
+    <div class="plot" id="plot-all">
+
+    </div>
+    <div class="plot" id="plot-genome">
+
+    </div>
+  </div>
+  <footer>
+    <p class="beian">ICP证：<a href="http://www.beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+  </footer>
+  <script type="text/javascript">
+    $("#tbody").children().hide();
+    // var pageItemNum=parseInt($("#itemNum").attr("value"));
+    var pageItemNum = 15
+    var itemLen = $("#tbody").children().length;
+    var nowPage = 1;
+    var pageNum;
+    var trendcy; //1为下一页，0为上一页
+    if (itemLen % pageNum == 0) {
+      pageNum = itemLen / pageItemNum;
+    } else {
+      pageNum = itemLen / pageItemNum + 1;
+    };
+
+    $("#itemNum").change(function() {
+      console.log($("#itemNum").attr("value"));
+      pageItemNum = parseInt(document.getElementById("itemNum").value);
+      if (itemLen % pageNum == 0) {
+        pageNum = itemLen / pageItemNum;
+      } else {
+        pageNum = itemLen / pageItemNum + 1;
+      };
+      nowPage = 1;
+      $("#tbody").children().hide();
+      tablePartShow(pageNum, 0, itemLen, 1, pageItemNum);
+      nowPage = 1;
+      console.log($("#itemNum").attr("value"));
+    });
+
+    // 点击下一页
+    $("#next").click(function() {
+      if (nowPage < pageNum - 1 && pageItemNum < itemLen) {
+        $("#tbody").children().hide();
+        var trend = 1;
+        if (trendcy == 0) {
+          nowPage = nowPage + 1;
+        }
+        tablePartShow(pageNum, nowPage, itemLen, trend, pageItemNum);
+        nowPage = nowPage + 1;
+      }
+    });
+    // 点击上一页
+    $("#previous").click(function() {
+      if (nowPage >= 1 && pageItemNum < itemLen) {
+        $("#tbody").children().hide();
+        var trend = 0;
+        if (trendcy == 1) {
+          nowPage = nowPage - 1;
+        }
+        tablePartShow(pageNum, nowPage, itemLen, trend, pageItemNum);
+        nowPage = nowPage - 1;
+      }
+    });
+    // 翻页函数
+    function tablePartShow(pageNum, nowPage, itemLen, trend, pageItemNum) {
+      // console.log(nowPage);
+      if (trend == 1) {
+        for (var i = nowPage * pageItemNum; i < Math.min((nowPage + 1) * pageItemNum, itemLen); i++) {
+          $("#tbody").children().eq(i).show();
+        }
+        trendcy = 1;
+      } else {
+        for (var i = nowPage * pageItemNum - 1; i >= Math.max((nowPage - 1) * pageItemNum, 0); i--) {
+          $("#tbody").children().eq(i).show();
+        }
+        trendcy = 0;
+      }
+    };
+
+    $(document).ready(function() {
+      $('table').hide();
+      $("#total-number").text(itemLen);
+      tablePartShow(pageNum, 0, itemLen, 1, pageItemNum);
+      nowPage = 1;
+      $('#load').delay(8000).hide();
+      $('table').show();
+
+      $('#id-up').click(function() {
+        /*1表示升序排列*/
+        $("#id-up").css("border-bottom", "8px solid #626666");
+        $("#id-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 0);
+      });
+
+      $('#id-down').click(function() {
+        /*0表示降序排列*/
+        $("#id-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#id-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 0);
+      });
+
+      $('#virus-up').click(function() {
+        /*1表示升序排列*/
+        $("#virus-up").css("border-bottom", "8px solid #626666");
+        $("#virus-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 1);
+      });
+
+      $('#virus-down').click(function() {
+        /*0表示降序排列*/
+        $("#virus-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#virus-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 1);
+      });
+
+      $('#genome-up').click(function() {
+        /*1表示升序排列*/
+        $("#genome-up").css("border-bottom", "8px solid #626666");
+        $("#genome-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 2);
+      });
+
+      $('#genome-down').click(function() {
+        /*0表示降序排列*/
+        $("#genome-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#genome-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 2);
+      });
+
+      $('#start-up').click(function() {
+        /*1表示升序排列*/
+        $("#start-up").css("border-bottom", "8px solid #626666");
+        $("#start-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 4);
+      });
+
+      $('#start-down').click(function() {
+        /*0表示降序排列*/
+        $("#start-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#start-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 4);
+      });
+
+      $('#end-up').click(function() {
+        /*1表示升序排列*/
+        $("#end-up").css("border-bottom", "8px solid #626666");
+        $("#end-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 5);
+      });
+
+      $('#end-down').click(function() {
+        /*0表示降序排列*/
+        $("#end-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#end-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 5);
+      });
+
+      $('#length-up').click(function() {
+        /*1表示升序排列*/
+        $("#length-up").css("border-bottom", "8px solid #626666");
+        $("#length-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 6);
+      });
+
+      $('#length-down').click(function() {
+        /*0表示降序排列*/
+        $("#length-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#length-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 6);
+      });
+
+      $('#sample-up').click(function() {
+        /*1表示升序排列*/
+        $("#sample-up").css("border-bottom", "8px solid #626666");
+        $("#sample-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 11);
+      });
+
+      $('#sample-down').click(function() {
+        /*0表示降序排列*/
+        $("#sample-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#sample-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 11);
+      });
+
+
+      $('#Avg_CPM-up').click(function() {
+        /*1表示升序排列*/
+        $("#Avg_CPM-up").css("border-bottom", "8px solid #626666");
+        $("#Avg_CPM-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 7);
+      });
+
+      $('#Avg_CPM-down').click(function() {
+        /*0表示降序排列*/
+        $("#Avg_CPM-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#Avg_CPM-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 7);
+      });
+      $('#Avg_junction_reads-up').click(function() {
+        /*1表示升序排列*/
+        $("#Avg_junction_reads-up").css("border-bottom", "8px solid #626666");
+        $("#Avg_junction_reads-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 8);
+      });
+
+      $('#Avg_junction_reads-down').click(function() {
+        /*0表示降序排列*/
+        $("#Avg_junction_reads-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#Avg_junction_reads-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFunParseFloat(attrCd_listSort, 8);
+      });
+
+      $('#strand-up').click(function() {
+        /*1表示升序排列*/
+        $("#strand-up").css("border-bottom", "8px solid #626666");
+        $("#strand-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 3);
+      });
+
+      $('#strand-down').click(function() {
+        /*0表示降序排列*/
+        $("#strand-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#strand-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 3);
+      });
+
+
+      $('#annotationGene-up').click(function() {
+        /*1表示升序排列*/
+        $("#annotationGene-up").css("border-bottom", "8px solid #626666");
+        $("#annotationGene-down").css("border-top", "8px solid #c8c8c8");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 9);
+      });
+
+      $('#annotationGene-down').click(function() {
+        /*0表示降序排列*/
+        $("#annotationGene-up").css("border-bottom", "8px solid #c8c8c8");
+        $("#annotationGene-down").css("border-top", "8px solid #626666");
+        var attrCd_listSort = $(this).attr('attrCd_listSort');
+        sortFun(attrCd_listSort, 9);
+      });
+
+
+      function sortFun(attrCd_listSort, n) {
+        var trs = [];
+        var tbody = document.getElementById("tbody");
+        var allRows = tbody.rows;
+        for (var i = 0; i < allRows.length; i++) {
+          trs.push(allRows[i]);
+        }
+
+        trs.sort(function(tr1, tr2) {
+          var date1 = $.trim($(tr1).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+          var date2 = $.trim($(tr2).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+
+          if (attrCd_listSort == 1) {
+            if (date1 < date2) {
+              return -1;
+            } else {
+              return 1;
+            }
+          } else {
+            if (date1 < date2) {
+              return 1;
+            } else {
+              return -1;
+            }
+          }
+        });
+        for (var i = 0; i < trs.length; i++) {
+          tbody.appendChild(trs[i]);
+        }
+      }
+
+      function sortFunParseFloat(attrCd_listSort, n) {
+        var trs = [];
+        var tbody = document.getElementById("tbody");
+        var allRows = tbody.rows;
+        for (var i = 0; i < allRows.length; i++) {
+          trs.push(allRows[i]);
+        }
+
+        trs.sort(function(tr1, tr2) {
+          var date1 = $.trim($(tr1).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+          var date2 = $.trim($(tr2).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+
+          if (attrCd_listSort == 1) {
+            if (parseFloat(date1) < parseFloat(date2)) {
+              return -1;
+            } else {
+              return 1;
+            }
+          } else {
+            if (parseFloat(date1) < parseFloat(date2)) {
+              return 1;
+            } else {
+              return -1;
+            }
+          }
+        });
+
+        for (var i = 0; i < trs.length; i++) {
+          tbody.appendChild(trs[i]);
+        }
+      };
+      // 图片生成
+      // plotPos();
+      // plotNeg();
+      plotVC();
+      if (title == 'HPV16') {
+        $('#plot-genome canvas').width($('#plot-all canvas').width());
+      } else if (title == 'HPV18') {
+        $('#plot-genome canvas').width($('#plot-all canvas').width());
+      } else if (title == 'HBV') {
+        $('#plot-genome canvas').width($('#plot-all canvas').width());
+      } else if (title == 'KSHV') {
+        $('#plot-genome canvas').width($('#plot-all canvas').width());
+      } else if (title == 'ZIKV') {
+        $('#plot-genome canvas').width($('#plot-all canvas').width());
+      } else if (title == 'rLCV') {
+        $('#plot-genome canvas').width($('#plot-all canvas').width());
+      } else if (title == 'EBV') {
+        $('#plot-genome canvas').width($('#plot-all canvas').width());
+      }
+      $('#plot-box').hide();
+    });
+
+    //filter
+    var tableRow = [];
+    var tableAfterFilter = [];
+    var tableFilter = [];
+    var tBody = document.getElementById("tbody");
+    var allRows = tbody.rows;
+    for (var i = 0; i < allRows.length; i++) {
+      tableRow.push(allRows[i]);
+    }
+
+    function deleteAllRow(table) {
+      for (var i = 0; i < table.length; i++) {
+        document.getElementById("tbody").deleteRow(0);
+      }
+    };
+
+    var tableBeforeFilter = tableRow;
+    $("#resetButton").click(function() {
+      location.reload();
+    });
+
+    $("#filterButton").click(function() {
+      var filterContent = document.getElementById("filter").value;
+      var filterItem = parseInt(document.getElementById("filter-select").value);
+      document.getElementById("itemNum").value
+      console.log("change");
+      deleteAllRow(tableBeforeFilter);
+
+      var tableAfterFilter = [];
+      if (filterItem == 7) {
+        console.log('pValue');
+        for (var i = 0; i < tableBeforeFilter.length; i++) {
+          var itemInTable = parseFloat($.trim($(tableBeforeFilter[i]).find('td:eq(' + filterItem + ')').text()));
+          filterContent = parseFloat(filterContent);
+          if (itemInTable >= filterContent) {
+            tableAfterFilter.push(tableBeforeFilter[i]);
+          }
+        };
+      } else if (filterItem == 8) { //暂未有小于的列
+        for (var i = 0; i < tableBeforeFilter.length; i++) {
+          var itemInTable = Math.abs(parseFloat($.trim($(tableBeforeFilter[i]).find('td:eq(' + filterItem + ')').text())));
+          filterContent = Math.abs(parseFloat(filterContent));
+          filterContent = parseFloat(filterContent);
+          if (itemInTable >= filterContent) {
+            tableAfterFilter.push(tableBeforeFilter[i]);
+          }
+        };
+      } else if (filterItem == 1000) { //暂未有小于的列
+        for (var i = 0; i < tableBeforeFilter.length; i++) {
+          var itemInTable = Math.abs(parseFloat($.trim($(tableBeforeFilter[i]).find('td:eq(' + filterItem + ')').text())));
+          filterContent = Math.abs(parseFloat(filterContent));
+          filterContent = parseFloat(filterContent);
+          if (itemInTable >= filterContent) {
+            tableAfterFilter.push(tableBeforeFilter[i]);
+          }
+        };
+      } else {
+        for (var i = 0; i < tableBeforeFilter.length; i++) {
+          var itemInTable = $.trim($(tableBeforeFilter[i]).find('td:eq(' + filterItem + ')').text());
+          if (itemInTable === filterContent || itemInTable.indexOf(filterContent) != -1) {
+            tableAfterFilter.push(tableBeforeFilter[i]);
+          }
+        };
+      };
+
+      tableBeforeFilter = tableAfterFilter;
+      for (var i = 0; i < tableAfterFilter.length; i++) {
+        document.getElementById("tbody").appendChild(tableAfterFilter[i]);
+      };
+      console.log(tableAfterFilter);
+      $("#filter-num").text(tableAfterFilter.length);
+      $("#filter-label2").show();
+      $("#tbody").children().hide();
+
+      pageItemNum = parseInt($("#itemNum").attr("value"));
+      itemLen = $("#tbody").children().length;
+      nowPage = 1;
+      if (itemLen % pageNum == 0) {
+        pageNum = itemLen / pageItemNum;
+      } else {
+        pageNum = itemLen / pageItemNum + 1;
+      };
+      tablePartShow(pageNum, 0, itemLen, 1, pageItemNum);
+      nowPage = 1;
+
+      // 图片生成
+      // plotPos();
+      // plotNeg();
+      console.log('plot start');
+      var state = $('#plot-box');
+      if (state.is(':visible')) {
+        plotVC();
+      } else {
+        $('#plot-box').show();
+        plotVC();
+        $('#plot-box').hide();
+      }
+
+    });
+    //图表切换
+    $('#SGBButton').click(function() {
+      $('#table-box').toggle();
+      $('#switch-main').toggle();
+      $('#plot-box').toggle();
+      if ($('#SGBButton').attr('value') == 'Simple Genome Browser') {
+        $('#SGBButton').attr('value', 'Back to Table');
+      } else if ($('#SGBButton').attr('value') == 'Back to Table') {
+        $('#SGBButton').attr('value', 'Simple Genome Browser');
+      };
+    });
+    //download
+    $("#downloadButton").click(function() {
+      var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementById('result-table').outerHTML + "</body></html>";
+      html = html.replace(/none/g, "table-row");
+      var blob = new Blob([html], {
+        type: "application/vnd.ms-excel"
+      });
+      var a = $("#downloadA")[0]
+      // 利用URL.createObjectURL()方法为a元素生成blob URL
+      a.href = URL.createObjectURL(blob);
+      // 设置文件名
+      a.download = "CircVirus-table.xls";
+    });
+    // plot
+    function plotPos() {
+      var title = $('#tbody').children().eq(0).children().eq(1).text();
+      var tableRowNum = $('#tbody').children().length;
+      var nameList = [];
+      var startList = [];
+      var lengthList = [];
+      for (var i = 0; i < tableRowNum; i++) {
+        var name = $('#tbody').children().eq(i).children().eq(0).text();
+        var start = $('#tbody').children().eq(i).children().eq(4).text();
+        var length = $('#tbody').children().eq(i).children().eq(6).text();
+        var strand = $('#tbody').children().eq(i).children().eq(3).text();
+        var virus = $('#tbody').children().eq(i).children().eq(1).text();
+        if (strand == '+' && title == virus) {
+          if (name != 'NA') {
+            nameList[nameList.length] = name;
+            // console.log(nameList);
+          };
+          if (start != 'NA') {
+            startList[startList.length] = start;
+          };
+          if (length != 'NA') {
+            lengthList[lengthList.length] = length;
+          };
+        };
+      };
+      // console.log(nameList);
+      // console.log(startList);
+      // console.log(lengthList);
+      // var highPos = nameList.length * 40;
+      if (nameList.length == 0) {
+        $('#plot-pos').height(0);
+        $('#plot-pos div').height(0);
+        $('#plot-pos canvas').height(0);
+      } else if (nameList.length < 5) {
+        $('#plot-pos').height(120);
+        $('#plot-pos div').height(120);
+        $('#plot-pos canvas').height(120);
+      } else if (nameList.length < 20) {
+        $('#plot-pos').height(200);
+        $('#plot-pos div').height(200);
+        $('#plot-pos canvas').height(200);
+      } else if (nameList.length < 50) {
+        $('#plot-pos').height(300);
+        $('#plot-pos div').height(300);
+        $('#plot-pos canvas').height(300);
+      } else {
+        $('#plot-pos').height(400);
+        $('#plot-pos div').height(400);
+        $('#plot-pos canvas').height(400);
+      }
+
+      // $('canvas').height(400);
+      var myChart = echarts.init(document.getElementById('plot-pos'));
+      var option = {
+        title: {
+          text: title,
+          subtext: 'Strand : +',
+          // sublink: 'http://106.15.224.54/home/'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          },
+          formatter: function(params) {
+            var tar = params[1];
+            return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        yAxis: {
+          type: 'category',
+          axisLabel: {
+            fontSize: 9,
+          },
+          splitLine: {
+            show: false
+          },
+          data: nameList
+        },
+        xAxis: {
+          type: 'value',
+          max: genomeLengh[title],
+
+        },
+        series: [{
+            name: '辅助',
+            type: 'bar',
+            stack: 'test',
+            itemStyle: {
+              barBorderColor: 'rgba(0,0,0,0)',
+              color: 'rgba(0,0,0,0)'
+            },
+            emphasis: {
+              itemStyle: {
+                barBorderColor: 'rgba(0,0,0,0)',
+                color: 'rgba(0,0,0,0)'
+              }
+            },
+            data: startList
+          },
+          {
+            name: ['length'],
+            type: 'bar',
+            stack: 'test',
+            fontSize: 16,
+            label: {
+              show: false,
+              position: 'inside',
+            },
+            data: lengthList
+          }
+        ],
+        color: '#2f4f4f'
+      };
+
+      myChart.setOption(option);
+      myChart.resize();
+      myChart.on('click', function(series) {
+        var id = series.name;
+        var url = "/detail/?Circ_id=";
+        var url = url.concat(id);
+        window.location.href = url;
+      });
+    };
+
+    function plotNeg() {
+      var title = $('#tbody').children().eq(1).children().eq(1).text();
+      var tableRowNum = $('#tbody').children().length;
+      var nameList = [];
+      var startList = [];
+      var lengthList = [];
+      for (var i = 0; i < tableRowNum; i++) {
+        var name = $('#tbody').children().eq(i).children().eq(0).text();
+        var start = $('#tbody').children().eq(i).children().eq(4).text();
+        var length = $('#tbody').children().eq(i).children().eq(6).text();
+        var strand = $('#tbody').children().eq(i).children().eq(3).text();
+        var virus = $('#tbody').children().eq(i).children().eq(1).text();
+        if (strand == '-' && title == virus) {
+          if (name != 'NA') {
+            nameList[nameList.length] = name;
+          };
+          if (start != 'NA') {
+            startList[startList.length] = start;
+          };
+          if (length != 'NA') {
+            lengthList[lengthList.length] = length;
+          };
+        };
+      };
+
+      if (nameList.length == 0) {
+        $('#plot-neg').height(0);
+        $('#plot-neg div').height(0);
+        $('#plot-neg canvas').height(0);
+      } else if (nameList.length < 5) {
+        $('#plot-neg').height(120);
+        $('#plot-neg div').height(120);
+        $('#plot-neg canvas').height(120);
+      } else if (nameList.length < 20) {
+        $('#plot-neg').height(200);
+        $('#plot-neg div').height(200);
+        $('#plot-neg canvas').height(200);
+      } else if (nameList.length < 50) {
+        $('#plot-neg').height(300);
+        $('#plot-neg div').height(300);
+        $('#plot-neg canvas').height(300);
+      } else {
+        $('#plot-neg').height(400);
+        $('#plot-neg div').height(400);
+        $('#plot-neg canvas').height(400);
+      }
+
+      // $('canvas').height(400);
+      var myChart = echarts.init(document.getElementById('plot-neg'));
+      var option = {
+        title: {
+          text: title,
+          subtext: 'Strand : -',
+          // sublink: 'http://106.15.224.54/home/'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          },
+          formatter: function(params) {
+            var tar = params[1];
+            return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+          }
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        yAxis: {
+          type: 'category',
+          axisLabel: {
+            fontSize: 9,
+          },
+          splitLine: {
+            show: false
+          },
+          data: nameList
+        },
+        xAxis: {
+          type: 'value',
+          max: genomeLengh[title],
+
+        },
+        series: [{
+            name: '辅助',
+            type: 'bar',
+            stack: 'test',
+            itemStyle: {
+              barBorderColor: 'rgba(0,0,0,0)',
+              color: 'rgba(0,0,0,0)'
+            },
+            emphasis: {
+              itemStyle: {
+                barBorderColor: 'rgba(0,0,0,0)',
+                color: 'rgba(0,0,0,0)'
+              }
+            },
+            data: startList
+          },
+          {
+            name: ['length'],
+            type: 'bar',
+            stack: 'test',
+            fontSize: 16,
+            label: {
+              show: false,
+              position: 'inside',
+            },
+            data: lengthList
+          }
+        ],
+        color: '#2f4f4f'
+      };
+
+      myChart.setOption(option);
+      myChart.resize();
+      myChart.on('click', function(series) {
+        var id = series.name;
+        var url = "/detail/?Circ_id=";
+        var url = url.concat(id);
+        window.location.href = url;
+      });
+    };
+    // plot all strand
+    // plotVC();
+    // plot genome
+    var title = $('#tbody').children().eq(0).children().eq(1).text();
+    plotGenome(title);
+  </script>
+
+</body>
+
+</html>

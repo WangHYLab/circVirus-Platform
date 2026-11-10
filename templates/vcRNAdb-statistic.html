@@ -1,0 +1,128 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/vcRNAdb.ico' %}" />
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <title>vcRNA Database</title>
+</head>
+
+<body id="index" class="home">
+  <div>
+    <header id="banner">
+      <h1><a href="/vcRNAdb/">Viral-circRNA Database</a></h1>
+
+      <nav>
+        <ul>
+
+          <li><a href="/vcRNAdb/">Home</a></li>
+          <li><a href="/search/">Search</a></li>
+          <li><a href="/browser/">Browser</a></li>
+          <li><a href="/download/">Downloads</a></li>
+          <li class="active"><a href="/statistic/">Statistics</a></li>
+          <li><a href="/help/">Help</a></li>
+        </ul>
+      </nav>
+
+    </header>
+    <section id="statistical">
+      <!-- <p class="title-one">Statistical Information</p> -->
+      <div id="statistical-item">
+        <li>Number of viruses included: <b>5</b></li>
+        <table class="stat-table" id="virus-type">
+          <tr>
+            <!-- <td><a href="https://en.wikipedia.org/wiki/Papillomaviridae">HPV16</a></td> -->
+            <td><a href="https://en.wikipedia.org/wiki/Papillomaviridae">HPV18</a></td>
+            <!-- <td><a href="https://en.wikipedia.org/wiki/Hepatitis_B_virus">HBV</a></td> -->
+            <td><a href="https://en.wikipedia.org/wiki/Kaposi%27s_sarcoma-associated_herpesvirus">KSHV</a></td>
+            <td><a href="https://en.wikipedia.org/wiki/Macacine_gammaherpesvirus_4">rLCV</a></td>
+            <td><a href="https://en.wikipedia.org/wiki/Epstein%E2%80%93Barr_virus">EBV</a></td>
+            <td><a href="https://en.wikipedia.org/wiki/MERS-CoV">MERS-CoV</a></td>
+          </tr>
+
+        </table>
+        <li id="num-virus">Number of viral circRNA included: <b><a href="/browser/">3912</a></b></li>
+        <table class="stat-table" id="table-virus">
+          <tr>
+            <th>Virus</td>
+            <th>Number</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=HPV18">HPV18</a></td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=KSHV">KSHV</a></td>
+            <td>590</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=rLCV">rLCV</a></td>
+            <td>19</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=EBV">EBV</a></td>
+            <td>102</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=MERS-CoV">MERS-CoV</a></td>
+            <td>3198</td>
+          </tr>
+        </table>
+        <li>Number of annotated genes: <b>104</b></li>
+        <li id="length-p">Length distribution of circRNAs: <b class="bpcolor">134 - 166400</b></li>
+        <img id="length-plot" src="{% static 'media/sample-length.jpg' %}" alt="">
+        <li id="num-study">Number of studies included: <b>9</b></li>
+        <img id="study-plot" src="{% static 'media/study-statistic.jpg' %}" alt="">
+
+        <li id="num-sample">Tissue type classification: <b>7</b></li>
+        <img id="sample-plot" src="{% static 'media/tissue-statistic.jpg' %}" alt="">
+
+
+      </div>
+
+    </section>
+
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>Viral-circRNA Database is developed by the <a href="http://life.tongji.edu.cn/Data/View/1488">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji University, Shanghai, China</a>.</p>
+      <p class="beian">ICP证：<a href="http://www.beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      // $('#table-study').hide();
+      // $('#table-sample').hide();
+      // $('#length-plot').hide();
+      // $('#sample-plot').hide();
+      // $('#length-plot').hide();
+    });
+
+    $('#num-study').click(function() {
+      $('#table-study').toggle();
+    });
+    $('#num-sample').click(function() {
+      $('#table-sample').toggle();
+    });
+    $('#num-virus').click(function() {
+      $('#table-virus').toggle();
+    });
+    $('#length-p').click(function() {
+      $('#length-plot').toggle();
+    });
+    $('#num-study').click(function() {
+      $('#study-plot').toggle();
+    });
+    $('#num-sample').click(function() {
+      $('#sample-plot').toggle();
+    });
+  </script>
+</body>
+
+</html>

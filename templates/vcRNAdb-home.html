@@ -1,0 +1,111 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/vcRNAdb.ico' %}" />
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <!-- <link rel="stylesheet" href="{% static 'css/main_input.css' %}" type="text/css"> -->
+  <!-- <script src="{% static 'js/prefixfree.min.js' %}"></script> -->
+  <title>vcRNA Database</title>
+</head>
+
+<body id="index" class="home">
+  <div>
+    <header id="banner">
+      <h1><a href="/vcRNAdb/">Viral-circRNA Database</a></h1>
+
+      <nav>
+        <ul>
+
+          <li class="active"><a href="/vcRNAdb/">Home</a></li>
+          <li><a href="/search/">Search</a></li>
+          <li><a href="/browser/">Browser</a></li>
+          <li><a href="/download/">Downloads</a></li>
+          <li><a href="/statistic/">Statistics</a></li>
+          <li><a href="/help/">Help</a></li>
+        </ul>
+      </nav>
+
+    </header>
+
+    <section id="search">
+      <form method="get" action="/result/">
+        <!-- <div id="sbdiv" class="input-wrapper" data-text=""> -->
+        <div id="sbdiv">
+          <input id="searchbox" type="text" name="quick-search" placeholder="e.g. EBV or Calu-3"><br>
+          <input class="submit" type="submit" value="Quick Search">
+        </div>
+      </form>
+      <!-- <form>
+        <input type="text" placeholder="搜索从这里开始...">
+        <button type="submit"></button>
+      </form> -->
+
+    </section>
+    <section id="content">
+      <div class="home-box">
+
+        <div class="gap"></div>
+        <img src="{% static 'media/home.jpg' %}" alt="" id="home-pic">
+      </div>
+
+      <div id="text">
+
+        <h2>Introduction to Viral-circRNA Database</h2>
+        <p class="p-indent">Viral infection causes the development of a variety of human malignancies, including hepatocellular carcinoma, cervical cancer, gastric cancer and so on. Integration of virus genome into host genome can alter the
+          expression of oncogenes and tumor suppressors to induce and promote the process of oncogenesis. The latest research reported that viral integration also expresses a class of special noncoding RNA, circRNA (circular RNA), which play critical
+          regulatory functions in virus biology and associated malignancies. Therefore, this study uses bioinformatics methods to systematically identify the viral circRNAs from virus-infected RNA-Seq samples (mainly from cancer samples), and built a
+          database of viral circRNAs to collect these circRNAs and annotate their biological characteristics. This database aims to provide data resources for promoting the research in virus biology and new biomarkers as well as precision medicine in
+          cancers.
+        </p>
+
+        <h3>
+          Main function:
+        </h3>
+        <ul>
+          <li>Search the database by virus.</li>
+          <li>Search the database by various conditions.</li>
+          <li>Browse the database. </li>
+          <li>Download search results or all items of the database.</li>
+          <li>View the characteristics of viral circRNAs.</li>
+        </ul>
+        <p></p>
+        <h3>Recent updates:</h3>
+        <ul>
+          <li>Mar 2020. Finished the simple genome browser of viral circRNAs.</li>
+          <li>Jan 2020. Finished the platform.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>Viral-circRNA Database is developed by the <a href="http://life.tongji.edu.cn/Data/View/1488">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji University, Shanghai, China</a>.</p>
+      <p class="beian">ICP证：<a href="http://www.beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+
+  </div>
+  <script>
+    // $('.submit').click(function() {
+    //   if ($('#searchbox').text() == '') {
+    //     $('#searchbox').text('HPV')
+    //
+    //   }
+    // })
+    // const wrapper = document.querySelector(".input-wrapper"),
+    //   textInput = document.querySelector("input[type='text']");
+    //
+    // textInput.addEventListener("keyup", event => {
+    //   wrapper.setAttribute("data-text", event.target.value);
+    // });
+  </script>
+</body>
+
+</html>

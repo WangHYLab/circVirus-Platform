@@ -1,0 +1,220 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/vcRNAdb.ico' %}" />
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/main-plot.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/echarts.min.js' %}"></script>
+  <script type="text/javascript" src="{% static '/js/genome-plot.js' %}"></script>
+  <title>vcRNA Database</title>
+</head>
+
+<body id="index" class="home">
+  <div>
+    <header id="banner">
+      <h1><a href="/vcRNAdb/">Viral-circRNA Database</a></h1>
+
+      <nav>
+        <ul>
+
+          <li><a href="/vcRNAdb/">Home</a></li>
+          <li><a href="/search/">Search</a></li>
+          <li><a href="/browser/">Browser</a></li>
+          <li><a href="/download/">Downloads</a></li>
+          <li><a href="/statistic/">Statistics</a></li>
+          <li><a href="/help/">Help</a></li>
+        </ul>
+      </nav>
+
+    </header>
+
+    <section id="detail">
+      <div>
+        <!-- <div class="prompt" id="prompt-box">
+          Genome Browser
+        </div> -->
+        <!-- <P id="detail-title">DETAIL INFORMATIONS</P> -->
+        <table id="detail-table">
+          {% for line in terms %}
+          <tr>
+            <td>Viral-circRNA Id:</td>
+            <td>{{ line.Circ_id}}</td>
+          </tr>
+          <!-- <tr>
+            <td>Name:</td>
+            <td>{{ line.Name}}</td>
+          </tr> -->
+          <tr>
+            <td>Virus:</td>
+            <td id="virus-name">{{ line.Virus}}</td>
+          </tr>
+          <tr>
+            <td>Genome:</td>
+            <td id="genome-key"><a href="https://www.ncbi.nlm.nih.gov/nuccore/{{ line.Genome}}">{{ line.Genome}}</a></td>
+          </tr>
+
+          <tr>
+            <td>Strand:</td>
+            <td>{{ line.Strand}}</td>
+          </tr>
+          <tr>
+            <td>Start Position:</td>
+            <td id="startNum">{{ line.Splice_start}}</td>
+          </tr>
+          <tr>
+            <td>End Position:</td>
+            <td id="endNum">{{ line.Splice_end}}</td>
+          </tr>
+          <tr>
+            <td>Splicing length:</td>
+            <td>{{ line.Splice_length}}</td>
+          </tr>
+
+          <tr>
+            <td>Organism:</td>
+            <td>{{ line.Organism}}</td>
+          </tr>
+          <tr>
+            <td>Supported samples:</td>
+            <td>{{ line.Supported_samples}}</td>
+          </tr>
+          <!-- <tr>
+            <td>Supported reads:</td>
+            <td>{{ line.Supported_reads}}</td>
+          </tr> -->
+          <!-- <tr>
+            <td>Rnase samples:</td>
+            <td>{{ line.Supported_rnase_samples_filtered}}</td>
+          </tr> -->
+          <tr>
+            <td title="junction reads count per million extracted reads">CPM:</td>
+            <td>{{ line.CPM}}</td>
+          </tr>
+          <tr>
+            <td title="Average junction reads count per million extracted reads">Average CPM:</td>
+            <td>{{ line.Avg_CPM}}</td>
+          </tr>
+          <tr>
+            <td>Junction Reads:</td>
+            <td>{{ line.Junction_reads}}</td>
+          </tr>
+          <tr>
+            <td>Average junction reads:</td>
+            <td>{{ line.Avg_junction_reads}}</td>
+          </tr>
+          <tr>
+            <td>Gene:</td>
+            <td>{{ line.Annotation_gene}}</td>
+          </tr>
+
+
+          <tr>
+            <td>Genome Length:</td>
+            <td>{{ line.Genome_length}}</td>
+          </tr>
+          <tr>
+            <td>Annotated Region:</td>
+            <td>{{ line.Annotation_region}}</td>
+          </tr>
+          <tr>
+            <td>Annotated Type:</td>
+            <td>{{ line.Annotation_type}}</td>
+          </tr>
+          <tr>
+            <td>Tissue Sample:</td>
+            <td>{{ line.Sample}}</td>
+          </tr>
+          <tr>
+            <td>Cancer:</td>
+            <td>{{ line.Cancer}}</td>
+          </tr>
+          <tr>
+            <td>Sequencing Type:</td>
+            <td>{{ line.Sequencing_type}}</td>
+          </tr>
+          <!-- <tr>
+            <td>Publication:</td>
+            <td>{{ line.Publication_title}}</td>
+          </tr> -->
+          <tr>
+            <td>Pubmed(PMID):</td>
+            <td id="pmid-list"><a class="like-a">{{ line.PMID}}</td>
+          </tr>
+          <tr>
+            <td>Study:</td>
+            <td id="srp-list"><a class="like-a">{{ SRPlist }}</a></td>
+          </tr>
+          <tr>
+            <td>Study Run:</td>
+            <td id="srr-list"><a class="like-a">{{ SRRlist }}</a></td>
+          </tr>
+
+          <tr>
+            <td>Experiment Condition:</td>
+            <td>{{ line.Experiment_condition}}</td>
+          </tr>
+          {% endfor %}
+
+        </table>
+      </div>
+
+    </section>
+
+    <div id="plot-detail-box">
+      <div class="legend-box">
+        <div class="strand-pos">
+          <div class="legend" id="pos-strand"></div>
+          <div id="pos">Strand +</div>
+        </div>
+        <div class="strand-neg">
+          <div class="legend" id="neg-strand"></div>
+          <div id="neg">Strand -</div>
+        </div>
+      </div>
+
+      <div class="plot-detail" id="plot-genome">
+      </div>
+    </div>
+    <!-- <div id="gonme-name-box">
+      <p id="gonem-name">genome</p>
+      <p id="genome-acc">nc111111</p>
+    </div> -->
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>Viral-circRNA Database is developed by the <a href="http://life.tongji.edu.cn/Data/View/1488">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji University, Shanghai, China</a>.</p>
+      <p class="beian">ICP证：<a href="http://www.beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+  </div>
+  <script type="text/javascript">
+    var key = $('#genome-key').text();
+    var start = $('#startNum').text();
+    var end = $('#endNum').text();
+
+    plotGenomeWithRegion(key, start, end);
+    var SRR = $("#srr-list a").text().replace(/;/g, '+or+');
+    var SRRdir = "https://www.ncbi.nlm.nih.gov/sra/?term=".concat(SRR);
+    $("#srr-list a").click(function() {
+      window.location.href = SRRdir;
+    });
+    var SRP = $("#srp-list a").text().replace(/;/g, '+or+');
+    var SRPdir = "https://www.ncbi.nlm.nih.gov/sra/?term=".concat(SRP);
+    $("#srp-list a").click(function() {
+      window.location.href = SRPdir;
+    });
+    var PMID = $("#pmid-list a").text();
+    var PMIDdir = "https://pubmed.ncbi.nlm.nih.gov/".concat(PMID);
+    $("#pmid-list a").click(function() {
+      window.location.href = PMIDdir;
+    });
+  </script>
+</body>
+
+</html>

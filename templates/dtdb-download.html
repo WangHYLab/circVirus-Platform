@@ -1,0 +1,141 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/dtdb.ico' %}" />
+  <link rel="stylesheet" href="{% static '/css/dtdb.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <title>DTDB</title>
+</head>
+
+<body>
+  <div>
+    <header id="banner">
+      <h1>
+        <a href="/dtdb/"><span class="t1">D</span>rug <span class="t1">T</span>ree <span class="t1">D</span>ata<span class="t1">B</span>ase</a>
+      </h1>
+
+      <nav>
+        <ul>
+          <li><a href="/dtdb/">Home</a></li>
+          <li><a href="/dtdb/search/">Search</a></li>
+          <li><a href="/dtdb/browser/">Browser</a></li>
+          <li class="active"><a href="/dtdb/download/">Downloads</a></li>
+          <li><a href="/dtdb/help/">Help</a></li>
+
+          <form class="q-search-form" action="/dtdb/query/" method="GET" id="searchbox">
+            <!-- <input class="submit" type="submit" value="Quick Search"> -->
+            <span id="nav-text">drug:</span>
+            <input id="q-search" type="text" name="drug" placeholder="e.g. Erlotinib">
+
+          </form>
+        </ul>
+      </nav>
+
+    </header>
+
+    <section id="content">
+      <div id="primary-data" class="databox">
+        <h2>Primary data</h2>
+        <p class="p-main">Primary data obtained from public databases.</p>
+        <div class="download">
+          <p>Drug response data</p>
+          <p class="p-download"><a href="/static/media/download/GDSC1_fitted_dose_response_25Feb20.zip">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Cell lines expression data</p>
+          <p class="p-download"><a href="/static/media/download/RMA_processed.zip">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Cell lines mutation data</p>
+          <p class="p-download"><a href="/static/media/download/mutations_20191101.zip">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Cell lines fusion data</p>
+          <p class="p-download"><a href="/static/media/download/fusions_20191101.csv">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Drug information</p>
+          <p class="p-download"><a href="/static/media/download/Screened_Compounds.xlsx">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Cancer gene census</p>
+          <p class="p-download"><a href="/static/media/download/cancer_gene_census.csv">Download</a></p>
+        </div>
+      </div>
+
+      <div id="processed-data" class="databox">
+        <h2>Processed data</h2>
+        <p class="p-main">The processed data is derived from the primary data processing.</p>
+        <div class="download">
+          <p>Separated drug response data</p>
+          <p class="p-download"><a href="/static/media/download/Drug.zip">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Cell lines fusion matrix</p>
+          <p class="p-download"><a href="/static/media/download/fusion_processed.zip">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Cell lines mutation matrix</p>
+          <p class="p-download"><a href="/static/media/download/mutation_processed.zip">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Core cacner pathway</p>
+          <p class="p-download"><a href="/static/media/download/core cancer pathway.gmt">Download</a></p>
+        </div>
+      </div>
+
+      <div id="analysis-data" class="databox">
+        <h2>Analyzed data</h2>
+        <p class="p-main">The analyzed data are those obtained after pharmacological classification tree analysis.</p>
+        <div class="download">
+          <p>Pharmacological classification tree</p>
+          <p class="p-download"><a href="/static/media/download/IC50_tree.zip">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Expression connection data</p>
+          <p class="p-download"><a href="/static/media/download/expression_connection_matrix.tsv">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Mutation/Fusion connection data</p>
+          <p class="p-download"><a href="/static/media/download/mutationfusion_connection_matrix.tsv">Download</a></p>
+        </div>
+        <div class="download">
+          <p> Similarity of cells based on pharmacological subtypes</p>
+          <p class="p-download"><a href="/static/media/download/cell_similarity_matrix.tsv">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Similarity of drugs based on pharmacological subtypes</p>
+          <p class="p-download"><a href="/static/media/download/drug_similarity_matrix.tsv">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Similarity of cancer types</p>
+          <p class="p-download"><a href="/static/media/download/Cancer_type_cluster">Download</a></p>
+        </div>
+        <div class="download">
+          <p>Similarity information of cancer types</p>
+          <p class="p-download"><a href="/static/media/download/Cancer_type_similarity_cluster_information.tsv">Download</a></p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>DTDB is developed by the <a href="https://life.tongji.edu.cn/03/45/c12620a131909/page.htm">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji
+          University</a>, Shanghai, China.</p>
+      <p class="beian">ICP证：<a href="https://beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+
+  </div>
+</body>
+
+</html>

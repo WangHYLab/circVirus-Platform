@@ -1,0 +1,290 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/dtdb.ico' %}" />
+  <link rel="stylesheet" href="{% static '/css/dtdb.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <title>DTDB</title>
+</head>
+
+<body>
+  <div>
+    <header id="banner">
+      <h1>
+        <a href="/dtdb/"><span class="t1">D</span>rug <span class="t1">T</span>ree <span class="t1">D</span>ata<span class="t1">B</span>ase</a>
+      </h1>
+
+      <nav>
+        <ul>
+          <li><a href="/dtdb/">Home</a></li>
+          <li><a href="/dtdb/search/">Search</a></li>
+          <li class="active"><a href="/dtdb/browser/">Browser</a></li>
+          <li><a href="/dtdb/download/">Downloads</a></li>
+          <li><a href="/dtdb/help/">Help</a></li>
+
+          <form class="q-search-form" action="/dtdb/query/" method="GET" id="searchbox">
+            <!-- <input class="submit" type="submit" value="Quick Search"> -->
+            <span id="nav-text">drug:</span>
+            <input id="q-search" type="text" name="drug" placeholder="e.g. Erlotinib">
+
+          </form>
+        </ul>
+      </nav>
+
+    </header>
+
+    <section id="content">
+
+      <div id="table" style="overflow:auto">
+        <table id="result-table">
+          <tr>
+            <th class="tigle">Drug Id
+              <span>
+                <div id="id-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="id-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Drug Name
+              <span>
+                <div id="name-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="name-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Synonyms
+              <span>
+                <div id="synonyms-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="synonyms-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Target
+              <span>
+                <div id="target-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="target-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Target Pathway
+              <span>
+                <div id="pathway-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="pathway-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Expression Connect
+              <span>
+                <div id="expr-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="expr-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+            <th class="tigle">Alteration Connect
+              <span>
+                <div id="mut-up" class="triangle-up" attrCd_listSort="1"></div>
+                <div id="mut-down" class="triangle-down" attrCd_listSort="0"></div>
+              </span>
+            </th>
+          </tr>
+          <tbody id="tbody">
+            {% for line in terms %}
+            <tr>
+              <td class="td-id" title="{{line.Drug_id}}"><a href="/dtdb/query/?drug={{line.Drug_id}}">{{line.Drug_id}}</a></td>
+              <td>{{line.Drug_name}}</td>
+              <td>{{line.Synonyms}}</td>
+              <td>{{line.Target}}</td>
+              <td>{{line.Target_pathway}}</td>
+              <td>{{line.Expr_connect}}</td>
+              <td>{{line.Mut_connect}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>DTDB is developed by the <a href="https://life.tongji.edu.cn/03/45/c12620a131909/page.htm">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji
+          University</a>, Shanghai, China.</p>
+      <p class="beian">ICP证：<a href="https://beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+
+  </div>
+  <script type="text/javascript">
+    // drug_id
+    $('#id-up').click(function() {
+      /*1表示升序排列*/
+      $("#id-up").css("border-bottom", "8px solid #DBA1C6");
+      $("#id-down").css("border-top", "8px solid white");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFunParseFloat(attrCd_listSort, 0);
+    });
+    $('#id-down').click(function() {
+      /*0表示降序排列*/
+      $("#id-up").css("border-bottom", "8px solid white");
+      $("#id-down").css("border-top", "8px solid #DBA1C6");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFunParseFloat(attrCd_listSort, 0);
+    });
+    // drug name
+    $('#name-up').click(function() {
+      /*1表示升序排列*/
+      $("#name-up").css("border-bottom", "8px solid #DBA1C6");
+      $("#name-down").css("border-top", "8px solid white");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFun(attrCd_listSort, 1);
+    });
+    $('#name-down').click(function() {
+      /*0表示降序排列*/
+      $("#name-up").css("border-bottom", "8px solid white");
+      $("#name-down").css("border-top", "8px solid #DBA1C6");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFun(attrCd_listSort, 1);
+    });
+    // synonyms
+    $('#synonyms-up').click(function() {
+      /*1表示升序排列*/
+      $("#synonyms-up").css("border-bottom", "8px solid #DBA1C6");
+      $("#synonyms-down").css("border-top", "8px solid white");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFun(attrCd_listSort, 2);
+    });
+    $('#synonyms-down').click(function() {
+      /*0表示降序排列*/
+      $("#synonyms-up").css("border-bottom", "8px solid white");
+      $("#synonyms-down").css("border-top", "8px solid #DBA1C6");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFun(attrCd_listSort, 2);
+    });
+    // target
+    $('#target-up').click(function() {
+      /*1表示升序排列*/
+      $("#target-up").css("border-bottom", "8px solid #DBA1C6");
+      $("#target-down").css("border-top", "8px solid white");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFun(attrCd_listSort, 3);
+    });
+    $('#target-down').click(function() {
+      /*0表示降序排列*/
+      $("#target-up").css("border-bottom", "8px solid white");
+      $("#target-down").css("border-top", "8px solid #DBA1C6");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFun(attrCd_listSort, 3);
+    });
+    // target pathway
+    $('#pathway-up').click(function() {
+      /*1表示升序排列*/
+      $("#pathway-up").css("border-bottom", "8px solid #DBA1C6");
+      $("#pathway-down").css("border-top", "8px solid white");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFun(attrCd_listSort, 4);
+    });
+    $('#pathway-down').click(function() {
+      /*0表示降序排列*/
+      $("#pathway-up").css("border-bottom", "8px solid white");
+      $("#pathway-down").css("border-top", "8px solid #DBA1C6");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFun(attrCd_listSort, 4);
+    });
+    // expr connect
+    $('#expr-up').click(function() {
+      /*1表示升序排列*/
+      $("#expr-up").css("border-bottom", "8px solid #DBA1C6");
+      $("#expr-down").css("border-top", "8px solid white");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFunParseFloat(attrCd_listSort, 5);
+    });
+    $('#expr-down').click(function() {
+      /*0表示降序排列*/
+      $("#expr-up").css("border-bottom", "8px solid white");
+      $("#expr-down").css("border-top", "8px solid #DBA1C6");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFunParseFloat(attrCd_listSort, 5);
+    });
+    // mut connect
+    $('#mut-up').click(function() {
+      /*1表示升序排列*/
+      $("#mut-up").css("border-bottom", "8px solid #DBA1C6");
+      $("#mut-down").css("border-top", "8px solid white");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFunParseFloat(attrCd_listSort, 6);
+    });
+    $('#mut-down').click(function() {
+      /*0表示降序排列*/
+      $("#mut-up").css("border-bottom", "8px solid white");
+      $("#mut-down").css("border-top", "8px solid #DBA1C6");
+      var attrCd_listSort = $(this).attr('attrCd_listSort');
+      sortFunParseFloat(attrCd_listSort, 6);
+    });
+
+    function sortFun(attrCd_listSort, n) {
+      var trs = [];
+      var tbody = document.getElementById("tbody");
+      var allRows = tbody.rows;
+      for (var i = 0; i < allRows.length; i++) {
+        trs.push(allRows[i]);
+      }
+
+      trs.sort(function(tr1, tr2) {
+        var date1 = $.trim($(tr1).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+        var date2 = $.trim($(tr2).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+
+        if (attrCd_listSort == 1) {
+          if (date1 < date2) {
+            return -1;
+          } else {
+            return 1;
+          }
+        } else {
+          if (date1 < date2) {
+            return 1;
+          } else {
+            return -1;
+          }
+        }
+      });
+      for (var i = 0; i < trs.length; i++) {
+        tbody.appendChild(trs[i]);
+      }
+    }
+
+    function sortFunParseFloat(attrCd_listSort, n) {
+      var trs = [];
+      var tbody = document.getElementById("tbody");
+      var allRows = tbody.rows;
+      for (var i = 0; i < allRows.length; i++) {
+        trs.push(allRows[i]);
+      }
+
+      trs.sort(function(tr1, tr2) {
+        var date1 = $.trim($(tr1).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+        var date2 = $.trim($(tr2).find('td:eq(' + n + ')').text()).replace(/,|\s|-|%/g, '');
+
+        if (attrCd_listSort == 1) {
+          if (parseFloat(date1) < parseFloat(date2)) {
+            return -1;
+          } else {
+            return 1;
+          }
+        } else {
+          if (parseFloat(date1) < parseFloat(date2)) {
+            return 1;
+          } else {
+            return -1;
+          }
+        }
+      });
+
+      for (var i = 0; i < trs.length; i++) {
+        tbody.appendChild(trs[i]);
+      }
+    };
+  </script>
+</body>
+
+</html>

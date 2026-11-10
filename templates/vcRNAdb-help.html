@@ -1,0 +1,230 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <link rel="shortcut icon" href="{% static 'media/icon/vcRNAdb.ico' %}" />
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css">
+  <script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+  <title>vcRNA Database</title>
+</head>
+
+<body id="index" class="home">
+  <div>
+    <header id="banner">
+      <h1><a href="/vcRNAdb/">Viral-circRNA Database</a></h1>
+
+      <nav>
+        <ul>
+
+          <li><a href="/vcRNAdb/">Home</a></li>
+          <li><a href="/search/">Search</a></li>
+          <li><a href="/browser/">Browser</a></li>
+          <li><a href="/download" />Downloads</a></li>
+          <li><a href="/statistic/">Statistics</a></li>
+          <li class="active"><a href="/help/">Help</a></li>
+        </ul>
+      </nav>
+
+    </header>
+    <section id="help">
+      <p class="title-one">Database Tutorial</p>
+
+      <ol class="ol1">
+        <li>How to search in Viral-circRNA Database</li>
+        <ul>
+          <li>Quick search entry on the Home page</li>
+          <p>In the quick search box on the homepage, you can search for the circRNAs
+            which you are interested in through precise or fuzzy search. Here you
+            can type in your query, including circRNA ID, virus type, tissue or sample
+            type, virus gene, etc., and then browse the results.</p>
+          <li>Conditional search entry on the Search page</li>
+          <p>In conditional search, you can set up filtering conditions to search
+            for the circRNA of interest, for instance, you can select the type of
+            virus (i.e., EBV or HBV), the type of tissue or sample (i.e., liver),
+            the name of the virus gene of interest (i.e., K7 of KSHV), the accession
+            number included in the Gene Expression Omnibus (GEO) database, the genome
+            region of the virus (i.e., CDS or genes), and even the length of the
+            circular RNA. Notably, the default range of length is 0 to 100,000.</p>
+          <li>Step by step to do complex search on the Browse page</li>
+          <p>In the Browse page, you can browse all the records in the database.
+            There is a filter box at the top of the table, you can use it to
+            complete a variety of complex screening.</p>
+        </ul>
+        <li class="">How to download data in Viral-circRNA Database</li>
+        <ul>
+          <li>Download the entire database</li>
+          <p>On the Download page, the entire database is available for download
+            in TXT format. It should be noted that you must enter a correct email
+            address before downloading.</p>
+          <li>Download search results</li>
+          <p>When you have finished searching and filtering, you are now on the Results page.
+            Click the download button on the result page to download the searched and
+            filtered result table.</p>
+        </ul>
+        <li class="">How to contact us</li>
+        <ul>
+          <li>Contact the laboratory</li>
+          <p><a class="a-italic" href="https://life.tongji.edu.cn/03/45/c12620a131909/page.htm">Haiyun Wang's Lab</a> at the <a class="a-italic" href="https://life.tongji.edu.cn/">School of Life Science and Technology</a>, <a class="a-italic"
+              href="https://www.tongji.edu.cn/">Tongji University,
+              shanghai,China</a>.</p>
+          <li>Contact the developer and maintainer</li>
+          <p>You can contact the developer (J Zheng) at this email address below at any time. Please note the intention in the email.</p>
+          <p class="a-italic bpcolor">1931524@tongji.edu.cn</p>
+        </ul>
+      </ol>
+
+    </section>
+
+    <!-- <section id="statistical">
+      <p class="title-one">Statistical Information</p>
+      <div id="statistical-item">
+        <li>Number of Viruses Included: <b>7</b></li>
+        <table class="stat-table" id="virus-type">
+          <tr>
+            <td>HPV16</td>
+            <td>HPV18</td>
+            <td>HBV</td>
+            <td>KSHV</td>
+            <td>rLCV</td>
+            <td>EBV</td>
+            <td>ZIKV</td>
+          </tr>
+
+        </table>
+        <li id="num-virus">Number of cvRNA included : <b><a href="/browser/">695</a></b></li>
+        <table class="stat-table" id="table-virus">
+          <tr>
+            <th>Virus</td>
+            <th>Number</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=HPV16">HPV16</a></td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=HPV18">HPV18</a></td>
+            <td>1</td>
+          </tr>
+          <tr>
+          <tr>
+            <td><a href="/result/?quick-search=HBV">HBV</a></td>
+            <td>9</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=KSHV">KSHV</a></td>
+            <td>514</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=rLCV">rLCV</a></td>
+            <td>13</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=EBV">EBV</a></td>
+            <td>152</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=ZIKV">ZIKV</a></td>
+            <td>3</td>
+          </tr>
+        </table>
+        <li>Number of Annotation Gene : <b>142</b></li>
+        <li id="length-p">Length Distribution of circRNA : <b class="bpcolor">134 - 169390</b></li>
+        <img id="length-plot" src="{% static 'media/length.jpg' %}" alt="">
+        <li id="num-study">Number of Studies Included: <b>19</b></li>
+        <table class="stat-table" id="table-study">
+          <tr>
+            <th>Study</td>
+            <th>Number</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP155533">SRP155533</a></td>
+            <td>504</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP094795">SRP094795</a></td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP136016">SRP136016</a></td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.ncbi.nlm.nih.gov/sra/?term=SRP176282">SRP176282</a></td>
+            <td>13</td>
+          </tr>
+        </table>
+        <li id="num-sample">Sample Classification : <b>43</b></li>
+        <table class="stat-table" id="table-sample">
+          <tr>
+            <th>Sample</td>
+            <th>Number</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=Adenocarcinoma,Uterine cervix tumor">Adenocarcinoma,Uterine cervix tumor</a></td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=Squamous cell carcinoma,Uterine cervix tumor">Squamous cell carcinoma,Uterine cervix tumor</a></td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=HNSCC ">HNSCC </a></td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=B cell lymphoma cell line/BCBL1">B cell lymphoma cell line/BCBL1</a></td>
+            <td>255</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=lymphoma cell line/BC1">lymphoma cell line/BC1</a></td>
+            <td>396</td>
+          </tr>
+          <tr>
+            <td><a href="/result/?quick-search=Macaca mulatta,lymphoma">Macaca mulatta,lymphoma</a></td>
+            <td>13</td>
+          </tr>
+        </table>
+
+      </div>
+
+    </section> -->
+
+    <footer id="footer" class="home-footer">
+      <img src="{% static 'media/univlogo.png' %}" alt="Tongji University logo" class="photo">
+      <p>Viral-circRNA Database is developed by the <a href="http://life.tongji.edu.cn/Data/View/1488">Haiyun Wang's Lab</a> at the <a href="https://life.tongji.edu.cn/">School of Life Sciences and Technology</a>, <a
+          href="https://www.tongji.edu.cn/">Tongji University, Shanghai, China</a>.</p>
+      <p class="beian">ICP证：<a href="http://www.beian.miit.gov.cn/">渝ICP备20007844号</a></p>
+    </footer>
+    <div class="">
+
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    // $(document).ready(function() {
+    //   $('#table-study').hide();
+    //   $('#table-sample').hide();
+    //   $('#length-plot').hide();
+    // });
+    //
+    // $('#num-study').click(function() {
+    //   $('#table-study').toggle();
+    // });
+    // $('#num-sample').click(function() {
+    //   $('#table-sample').toggle();
+    // });
+    // $('#num-virus').click(function() {
+    //   $('#table-virus').toggle();
+    // });
+    // $('#length-p').click(function() {
+    //   $('#length-plot').toggle();
+    // });
+  </script>
+</body>
+
+</html>

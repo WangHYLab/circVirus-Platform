@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="stylesheet" href="{% static 'css/PI.css' %}" type="text/css" />
+    <script
+      type="text/javascript"
+      src="{% static '/js/jquery.min.js' %}"
+    ></script>
+    <title>PI-api</title>
+  </head>
+
+  <body id="index" class="home">
+    <div>
+      <header>
+        <h1>PI-api</h1>
+
+        <nav>
+          <ul>
+            <li id="fun1"><a href="/pi/home/?element=fun1-box">Elisa结果解析</a></li>
+            <li><a href="#">待开发</a></li>
+            <li><a href="#">待开发</a></li>
+            <li><a href="#">待开发</a></li> 
+          </ul>
+        </nav>
+      </header>
+
+      <div class="func-res" id="func-res1">
+        <p>{{ file_name }} 结果描述：</p>
+        <div id="detial">
+          <p>{{ outstring1 }}</p>
+          <p>{{ outstring2 }}</p>
+          <p>{{ outstring3 }}</p>
+          <p>请验单编号: <span>{{ qydbh }}</span></p>
+          <p>项目编号: <span>{{ xmbh }}</span></p>
+          <p>检测编号: <span>{{ jcbh }}</span></p>
+          <p>检测项目: <span>{{ jcxm }}</span></p>
+          <p>检测依据: <span>{{ jcyj }}</span></p>
+          <p><a href="/media/{{outfile}}"> 点击下载</a></p>
+
+        </div>
+      </div>
+    </div>
+    <script>
+      $("#detial").append('{{ outstring }}')
+    </script>
+  </body>
+</html>
