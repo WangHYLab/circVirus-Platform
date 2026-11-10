@@ -16,7 +16,7 @@ The project runs on **Python 3.12 + Django 5.2** and stores all data in a local
 ## Local development
 
 ```bash
-# 1. Create/activate the environment (a ready-made `django312` conda env may exist)
+# 1. Create/activate the environment 
 conda create -n circvirus python=3.12 -y
 conda activate circvirus
 pip install -r requirements.txt
